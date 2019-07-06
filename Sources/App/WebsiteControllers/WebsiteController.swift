@@ -55,6 +55,3 @@ struct WebsiteController : RouteCollection {
     }
 }
 
-struct CountryContext : Encodable {
-    let countries : Future<[Country]>
-}
