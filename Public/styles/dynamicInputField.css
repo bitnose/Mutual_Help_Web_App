@@ -1,0 +1,59 @@
+.container1 input[type=text] {
+    padding:5px 0px;
+    margin:5px 5px 5px 0px;
+}
+
+.container2 input[type=text] {
+    padding:5px 0px;
+    margin:5px 5px 5px 0px;
+}
+
+.add_form_field1
+{
+    background-color: #0066ff;
+    border: none;
+    color: white;
+    padding: 8px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border:1px solid #a9a9a9;
+}
+
+.add_form_field2
+{
+    background-color: #0066ff;
+    border: none;
+    color: white;
+    padding: 8px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border:1px solid #a9a9a9;
+}
+
+input{
+    border: 1px solid #a9a9a9;
+    width: 600px;
+    height: 40px;
+    margin-bottom:14px;
+}
+
+.delete{
+    background-color: #fd1200;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}

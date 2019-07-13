@@ -75,6 +75,10 @@ struct AdData : Content {
     
 }
 
+/*
+ Contains data for "contact.leaf"
+ */
+
 struct ContactContext : Encodable {
     let title : String
     let name : String

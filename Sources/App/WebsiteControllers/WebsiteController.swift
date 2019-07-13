@@ -149,10 +149,13 @@ struct WebsiteController : RouteCollection {
     
             }
         }
-    }  
+    }
     
 }
 
+/*
+ Data filters
+ */
 
 struct DepartmentFilters: Content {
     var country: String?

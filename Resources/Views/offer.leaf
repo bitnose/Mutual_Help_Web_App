@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+    
+    <head>
+        <meta charset="UTF-8">
+            
+            
+            <title> Ad </title>
+            
+            <base href="" />
+            <link rel="stylesheet" href="/styles/pays.css" type="text/css" />
+            
+            <script type="text/javascript" src="/script/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="/script/pays.js"></script>
+            
+            <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0" />
+            
+            
+            
+            
+            
+            
+    </head>
+    
+    <body>
+        
+        <div id="scrollContent">
+            <div id="adHeader">
+                <img src="/Images/logo.svg" />
+            </div>
+            
+            <div id="offerBlock">
+                
+                
+                
+                
+                <div class="offerItem">
+                    <div class="offerTitle">
+                        
+                        <div id="likeIcon" class="iconDefault">
+                            <form method="post">
+                                <button id="likeIcon"><img src="/Images/MyHeart.png"></button>
+                            </form>
+                            <h6>#(hearts)</h6>
+                        </div>
+                        
+                        <div class="offerTitleText">
+                            <h2>#(department.departmentName) (#(department.departmentNumber))</h2>
+                            <h3>#(city.city)</h3>
+                        </div>
+                        <a href="/#(ad.id)/contact">
+                            <div id="contactIcon" class="iconDefault"><img src="/Images/LittleGuy.png" /><h6>Contacter!</h6></div>
+                        </a>
+                    </div>
+                    <div class="offerText">
+                        <div class="theOffer">
+                            <h4>Offre</h4>
+                            <div class="theOfferContent">
+                                <ul>
+                                    #if(count(offers) > 0) {
+                                    #for(offer in offers) {
+                                    <li>#(offer.offer)</li>
+                                    }} else {<li> No offers!</li>}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="theOffer">
+                            <h4>Demande</h4>
+                            <div class="theDemandContent">
+                                <ul>
+                                    #if(count(demands) > 0) {
+                                    #for(demand in demands) {
+                                    <li>#(demand.demand)</li>
+                                    }} else { <li> No demands!</li>}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="offerViewIcons">
+                        <!--
+                        #if(ad.images) {
+                        <a href="/#(ad.id)/showimages">
+                            <div id="photoIcon"><img src="/Images/Photo.png" /></div>
+                        </a>
+                        }
+                        -->
+                        <div id="moreInfoIcon"><img src="/Images/MoreInfo.png" /></div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div id="footerMobileFrame"><div id="footerMobile"><div id="footerLogo">
+                <p>&copy; 2019 gilets-jaunes-entraide.fr</p><a href="/countries"><img src="/Images/logo.svg"/></a>
+            </div></div></div>
+            
+            
+        </div>
+        
+        <div id="footer"></div>
+        <script src="/script/footer.js"></script>
+        
+    </body>
+</html>
+
+
+
+
+
+
+
+
