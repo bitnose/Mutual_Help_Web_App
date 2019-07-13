@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Vapor
 
 // Model for Department
 
@@ -21,3 +22,4 @@ final class Department : Codable {
         
     }
 }
+
