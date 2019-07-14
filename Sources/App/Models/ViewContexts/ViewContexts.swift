@@ -28,8 +28,6 @@ struct CountryData : Encodable {
     
 }
 
-
-
 /// View Context for the "adList.leaf"
 /*
  AdsOfPerimeterData
@@ -55,6 +53,12 @@ struct AdObject : Content {
     let offers : [Offer]
     let city : City
     let department : Department
+}
+
+
+struct AdContext : Content {
+    let data : AdsOfPerimeterData
+    let showOffer : Bool
 }
 
 /*

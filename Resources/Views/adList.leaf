@@ -26,15 +26,18 @@
                 
                 <div id="adControlBar">
                     
-                    <a href="/countries/ads/offers/#(selectedDepartment.id)"><div id="offre" class="controlBar">Offres</div></a>
-                    <a href="/countries/ads/demands/#(selectedDepartment.id)"><div id="demand" class="controlBar">Demandes</div></a>
+                    <a href="/countries/ads/offers/#(data.selectedDepartment.id)"><div id="offre" class="controlBar">Offres</div></a>
+                    <a href="/countries/ads/demands/#(data.selectedDepartment.id)"><div id="demand" class="controlBar">Demandes</div></a>
+                   
                 </div>
+                
+            
                 
             </div>
             <div id="adList">
                 <div id="adListFrame">
                     
-                    #for(adObject in ads) {
+                    #for(adObject in data.ads) {
                     <a href="/ads/#(adObject.adID)">
                         <div class="adItem">
                             <div class="adTitle">
@@ -43,13 +46,26 @@
                             </div>
                             <div class="adText">
                                 <ul>
+                                    
+                                    #if(showOffer == true) {
+                                    
                                     #if(count(adObject.offers) > 0) {
                                     #for(offer in adObject.offers) {
                                     <li>
                                         #(offer.offer)
                                         </td>
                                         }} else {<td> No offers! </li>}
+                                    } else {
+                                    
+                                    #if(count(adObject.demands) > 0) {
+                                    #for(demand in adObject.demands) {
+                                    <li>
+                                        #(demand.demand)
+                                        </td>
+                                        }} else {<td> No Demands! </li>}
+                                    }
                                 </ul>
+                                
                             </div>
                         </div>
                     </a>

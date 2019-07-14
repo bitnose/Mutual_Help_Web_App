@@ -27,13 +27,15 @@ struct WebsiteController : RouteCollection {
          2. Get Request - GET ALL THE COUNTRIES
          3. Get Request - GET ADS OF THE PERIMETER OF THE SELECTED DEPARTMENT
          4. Get Request - GET THE CONTACT OF THE AD
+         5. Get Rqquest - GET ADS OF THE PERIMETER OF THE SELECTED DEPARTMENT (OFFERS/DEMANDS)
          9. Post Request - POST/REMOVE HEART TO THE AD
          */
         websiteRoutes.get("ads", String.parameter, use: getAdHandler) // 1.
         websiteRoutes.get("countries", use: countryHandler) // 2.
-        websiteRoutes.get("countries", "ads", use: adsOfPerimeterHandler) // 3.
+        websiteRoutes.get("countries", "ads", use: adsOfPerimeterHandlers) // 3.
         websiteRoutes.get("ads", "contact", String.parameter, use: getContactHandler) // 4.
-       
+        websiteRoutes.get("countries", "ads", String.parameter, UUID.parameter, use: adsOfPerimeterHandler) // 5.
+     
     }
     
     /*
@@ -85,17 +87,19 @@ struct WebsiteController : RouteCollection {
      6. Return and render the view and pass the data in.
      */
   
-    func adsOfPerimeterHandler(_ req: Request) throws -> Future<View> { // 1.
+    func adsOfPerimeterHandlers(_ req: Request) throws -> Future<View> { // 1.
         
         let client = try req.make(Client.self) // 2.
         // 3.
+        let show = true
         let filters = try req.query.decode(DepartmentFilters.self)
         guard let departmentString = (filters.department) else {throw Abort(.internalServerError)}
         
         return client.get("http://localhost:9090/api/ads/all/\(departmentString)/").flatMap(to: View.self) { res in // 4.
             return try res.content.decode(AdsOfPerimeterData.self).flatMap(to: View.self) { data in // 5.
               
-                return try req.view().render("adList", data) // 6.
+                let context = AdContext(data: data, showOffer: show)
+                return try req.view().render("adList", context) // 6.
                 
             }
         }
@@ -150,11 +154,53 @@ struct WebsiteController : RouteCollection {
             }
         }
     }
+ 
     
+    /*
+     Function to make an API request to get all the ads of the selected department and ads of the sibling department. Returns the adList view.
+     1. Function return Future<View>
+     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
+     3. Get String parameter and UUID parameter from the url.
+     4. Create a boolean which store the value if the offers should be shown on the html.
+     5. If the string parameters is "offers" then th boolean = true, otherwise the boolean = false (show demands).
+     6. Sends an HTTP GET Request to a server and returns a view
+     7. Return and Decode JSON response to AdsOfPerimeterData. FlatMap future to View.self.
+     8. Creata a context.
+     9. Return and render the view with context data.
+     */
+
+    
+    func adsOfPerimeterHandler(_ req: Request) throws -> Future<View> { // 1.
+        
+        let client = try req.make(Client.self) // 2.
+        // 3.
+        let string = try req.parameters.next(String.self)
+        let departmentID = try req.parameters.next(UUID.self)
+     
+        // 4.
+        var showOffers : Bool
+        // 5.
+        if string == "offers" {
+            showOffers = true
+        } else {
+            showOffers = false
+        }
+        
+        return client.get("http://localhost:9090/api/ads/all/\(departmentID)/").flatMap(to: View.self) { res in // 6.
+            return try res.content.decode(AdsOfPerimeterData.self).flatMap(to: View.self) { data in // 7.
+                
+                let context = AdContext(data: data, showOffer: showOffers) // 8.
+                return try req.view().render("adList", context) // 9.
+                
+            }
+        }
+    }
 }
 
 /*
  Data filters
+ - selected country
+ - selected department (id)
  */
 
 struct DepartmentFilters: Content {
@@ -162,7 +208,4 @@ struct DepartmentFilters: Content {
     var department: String?
 }
 
-struct Filters: Content {
-    var ad : String?
-}
 
