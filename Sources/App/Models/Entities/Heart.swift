@@ -13,8 +13,10 @@ final class Heart : Codable {
     var id : UUID?
     var heartCreatedAt : Date?
     var token : String
+    var adID : UUID
     
-    init(token: String) {
+    init(token: String, adID: UUID) {
         self.token = token
+        self.adID = adID
     }
 }

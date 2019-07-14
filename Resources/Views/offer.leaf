@@ -39,7 +39,7 @@
                         
                         <div id="likeIcon" class="iconDefault">
                             <form method="post">
-                                <button id="likeIcon"><img src="/Images/MyHeart.png"></button>
+                                <button id="likeIcon"><img src="/Images/MyHeart.png", <a href="/#(ad.id)/heart"></a></button>
                             </form>
                             <h6>#(hearts)</h6>
                         </div>

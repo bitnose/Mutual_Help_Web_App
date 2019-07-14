@@ -8,6 +8,9 @@
 import Foundation
 import Vapor
 import Leaf
+import Authentication
+
+
 
 /*
  Controller which handles API calls and rendering pages. This Controller conforms RouteCollection
@@ -35,6 +38,7 @@ struct WebsiteController : RouteCollection {
         websiteRoutes.get("countries", "ads", use: adsOfPerimeterHandlers) // 3.
         websiteRoutes.get("ads", "contact", String.parameter, use: getContactHandler) // 4.
         websiteRoutes.get("countries", "ads", String.parameter, UUID.parameter, use: adsOfPerimeterHandler) // 5.
+        websiteRoutes.post("ads", UUID.parameter, use: heartPostHandler)
      
     }
     
@@ -57,6 +61,7 @@ struct WebsiteController : RouteCollection {
     func countryHandler(_ req: Request) throws -> Future<View> { // 1.
         
         let client = try req.make(Client.self) // 2.
+        let heartToken = try req.session()["HEART_TOKEN"] ?? CryptoRandom().generateData(count: 16).base64EncodedString() // Create a token
         
         return client.get("http://localhost:9090/api/countries/").flatMap(to: View.self) { res in // 3.
             return try res.content.decode([Country].self).flatMap(to: View.self) { countries in // 4.
@@ -71,6 +76,7 @@ struct WebsiteController : RouteCollection {
                 }
                 
                 let context = CountryContext(countries: arrayOfCountries, title: "Home") // 10.
+                try req.session()["HEART_TOKEN"] = heartToken // 5
                 return try req.view().render("landing", context) // 11.
             }
         }
@@ -127,33 +133,7 @@ struct WebsiteController : RouteCollection {
         }
     }
     
-    /*
-     Function to make an API request to get a contact. Returns the contact view.
-     1. Function return Future<View>
-     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
-     3. Decode filter and unwrap the string.
-     4. Sends an HTTP GET Request to a server and returns a view
-     5. Return and Decode JSON response to Contact. FlatMap future to View.self.
-     6. Create a link by calling a method which creates one.
-     7. Create a context.
-     8. Return and render the view and pass the data in.
-     */
-    
-    func getContactHandler(_ req: Request) throws -> Future<View> { // 1.
-        let client = try req.make(Client.self) // 2.
-        let string = try req.parameters.next(String.self) // 3.
-    
-        return client.get("http://localhost:9090/api/contacts/\(string)/contact").flatMap(to: View.self) { res in // 4.
-        return try res.content.decode(Contact.self).flatMap(to: View.self) { data in // 5.
-            
-           let link = data.manipulateFBProfileLink(fbProfileURL: data.facebookLink) ?? "This link is broken" // 6.
-            
-            let context = ContactContext(title: "Contact", name: data.contactName, messenger: link) // 7.
-            return try req.view().render("contact", context) // 8.
-    
-            }
-        }
-    }
+   
  
     
     /*
@@ -195,6 +175,67 @@ struct WebsiteController : RouteCollection {
             }
         }
     }
+    
+    /*
+     Function to make an API request to get a contact. Returns the contact view.
+     1. Function return Future<View>
+     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
+     3. Decode filter and unwrap the string.
+     4. Sends an HTTP GET Request to a server and returns a view
+     5. Return and Decode JSON response to Contact. FlatMap future to View.self.
+     6. Create a link by calling a method which creates one.
+     7. Create a context.
+     8. Return and render the view and pass the data in.
+     */
+    
+    func getContactHandler(_ req: Request) throws -> Future<View> { // 1.
+        let client = try req.make(Client.self) // 2.
+        let string = try req.parameters.next(String.self) // 3.
+        
+        return client.get("http://localhost:9090/api/contacts/\(string)/contact").flatMap(to: View.self) { res in // 4.
+            return try res.content.decode(Contact.self).flatMap(to: View.self) { data in // 5.
+                
+                let link = data.manipulateFBProfileLink(fbProfileURL: data.facebookLink) ?? "This link is broken" // 6.
+                
+                let context = ContactContext(title: "Contact", name: data.contactName, messenger: link) // 7.
+                return try req.view().render("contact", context) // 8.
+                
+            }
+        }
+    }
+    
+    /*
+     POST/REMOVE HEART
+     Handler to Add/Remove Heart to the Ad
+     1. Get the heartToken from the request's session. This is the token what was generated when the user enters to the website at the first time.
+     2. Check that the heartToken is not nil, if yes, create a new token and create a heartToken session. Unwrap the token ensure that the token was generated properly.
+     3. Extact the UUID from the request's parameters.
+     4. Maka a client.
+     5. Make a post request to the api and encode data to json to send it.
+     6. Map the result to Response
+     7. Redirect to the page (refresh).
+     */
+    
+    func heartPostHandler(_ req: Request) throws -> Future<Response> {
+        
+        var heartToken = try req.session()["HEART_TOKEN"] // 1
+       // 2.
+        if heartToken == nil {
+            heartToken = try CryptoRandom().generateData(count: 16).base64EncodedString()
+            try req.session()["HEART_TOKEN"] = heartToken
+        }
+
+        let adID = try req.parameters.next(UUID.self) // 3.
+        let client = try req.make(Client.self) // 4.
+        // 5.
+        return client.post("http://localhost:9090/api/hearts", beforeSend: { req in
+            let data = Heart(token: heartToken!, adID: adID)
+            try req.content.encode(data, as: .json)
+            
+        }).map(to: Response.self) { rep in // 6.
+            return req.redirect(to: "\(adID)")
+            }
+        }
 }
 
 /*
