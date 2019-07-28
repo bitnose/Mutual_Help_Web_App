@@ -12,6 +12,7 @@ public func routes(_ router: Router) throws {
     let websiteController = WebsiteController() // 1
     try router.register(collection: websiteController) // 2
     
-    
+    let userWebsiteController = UserWebsiteController() // 1
+    try router.register(collection: userWebsiteController) // 2
     
 }

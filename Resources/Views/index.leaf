@@ -1,0 +1,22 @@
+#set("content") {
+
+<h1>#(title)</h1>
+#if(ads) {
+<table class="table table-bordered table-hover">
+    <tbody>
+        #for(ad in ads) {
+        <tr>
+            <td><a href="#(ad.id)/info"> #(ad.note)</a></td>
+            
+        </tr>
+        
+        }
+        </body>
+</table>
+} else {
+<h2> There aren't any ads yet!</h2>
+}
+}
+
+#embed("base")
+

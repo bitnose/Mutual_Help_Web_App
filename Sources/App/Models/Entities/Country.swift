@@ -8,7 +8,7 @@
 import Foundation
 import Vapor
 
-// Country Model
+/// Country Model
 final class Country : Codable {
     
     var id : UUID?

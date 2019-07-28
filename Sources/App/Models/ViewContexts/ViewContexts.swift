@@ -12,11 +12,9 @@ import Vapor
 
 /// MARK: - Declaration of the New Data Types
 
-/*
- View context for the "landing.leaf"
- - countries : Array of all future countries
- */
 
+/// View context for the "landing.leaf"
+/// countries : Array of all future countries
 struct CountryContext : Encodable {
     let countries : [CountryData]
     let title : String
@@ -29,11 +27,10 @@ struct CountryData : Encodable {
 }
 
 /// View Context for the "adList.leaf"
-/*
- AdsOfPerimeterData
- - Array of AdObjects
- - Department what was used to make a query
- */
+///
+/// AdsOfPerimeterData
+///Array of AdObjects
+///Department what was used to make a query
 struct AdsOfPerimeterData : Content {
     let ads : [AdObject]
     let selectedDepartment : Department
@@ -73,18 +70,18 @@ struct AdData : Content {
     let offers : [Offer]
     let department : Department
     let city : City
-    let hearts : Int
-    
-    
-    
+    let hearts : Int   
 }
 
-/*
- Contains data for "contact.leaf"
- */
 
+/// Contains data for "contact.leaf"
 struct ContactContext : Encodable {
     let title : String
     let name : String
     let messenger : String
+}
+
+struct AllAdsContext : Encodable {
+    let title : String
+    let ads : EventLoopFuture<[Ad]>
 }

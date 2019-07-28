@@ -8,7 +8,7 @@
 import Foundation
 import Vapor
 import Leaf
-import Authentication
+import Crypto
 
 
 
@@ -232,7 +232,7 @@ struct WebsiteController : RouteCollection {
             let data = Heart(token: heartToken!, adID: adID)
             try req.content.encode(data, as: .json)
             
-        }).map(to: Response.self) { rep in // 6.
+        }).map(to: Response.self) { res in // 6.
             return req.redirect(to: "\(adID)")
             }
         }

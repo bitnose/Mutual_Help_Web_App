@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!-- Declare a basic HTML 5 page with head and body. -->
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+                    #if(title == "Edit Ad" || title == "Perimeter") {
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" integrity="sha384-RdQbeSCGSeSdSlTMGnUr2oDJZzOuGjJAkQy1MbKMu8fZT5G0qlBajY0n0sY/hKMK" crossorigin="anonymous">
+                        }
+                        <link rel="stylesheet" href="/styles/style.css" type="text/css"/>
+                        <link rel="stylesheet" href="/styles/dynamicInputField.css" type="text/css"/>
+                        
+                        
+                        
+                        
+                        
+                        <title>#(title)</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="/index">Ads</a>
+            <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse"
+                id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item #if(title == "Countries"){active}">
+                        <a href="/countries" class="nav-link">Countries</a>
+                    </li>
+                    
+                    #if(userLoggedIn) {
+                    <li class="nav-item #if(title == "Create New Ad"){active}">
+                        
+                        <a href="ads/create" class="nav-link">Create New Ad</a>
+                    </li>
+                    <li class="nav-item #if(title == "All the Departments"){active}">
+                        
+                        <a href="department/all" class="nav-link">Departments</a>
+                    </li>
+                    }
+                    #if(!userLoggedIn) {
+                    <li class="nav-item #if(title == "Register"){active}">
+                        
+                        <a href="/register" class="nav-link">Register</a>
+                    </li>
+                    <li class="nav-item #if(title == "Login"){active}">
+                        <a href="/login" class="nav-link">Login</a>
+                    </li>
+                    }
+                    
+                    
+                </ul>
+                #if(userLoggedIn) {
+                <form class="form-inline" action="/logout" method="POST">
+                    <input class="nav-link btn" type="submit"
+                        value="Log out">
+                </form>
+                }
+            </div>
+        </nav>
+        <div class="container mt-3">
+            #get(content)
+        </div>
+        #if(showCookieMessage) {
+        <footer id="cookie-footer">
+            <div id="cookieMessage" class="container">
+                <span class="muted">
+                    This site uses cookies! To accept this, click <a href="#" onclick="cookiesConfirmed()">OK</a>
+                </span>
+            </div>
+        </footer>
+        <script src="/script/cookie.js"></script>
+        
+        }
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+        #if(title == "Edit Ad" || title == "Perimeter") {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js" integrity="sha384-uQwKPrmNkEOvI7rrNdCSs6oS1F3GvnZkmPtkntOSIiPQN4CCbFSxv+Bj6qe0mWDb" crossorigin="anonymous"></script>
+        <script src="/script/editAd.js"></script>
+        }
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/script/dynamicInputField.js"></script>
+    </body>
+</html>
+
+
