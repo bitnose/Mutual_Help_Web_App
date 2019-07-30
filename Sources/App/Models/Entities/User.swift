@@ -9,6 +9,13 @@ import Foundation
 import Vapor
 import Authentication
 
+/// User Model
+/// - id : UUID?
+/// - firstname : firstname of the user
+/// - lastname : lastneme of the user
+/// - email : email address of the user (this is username)
+/// - password : secret password
+/// - usertype : usertype (Enum: admin/standard/restricted)
 
 final class User : Codable {
     
@@ -17,13 +24,15 @@ final class User : Codable {
     var lastname : String
     var email : String
     var password : String
+    var usertype : UserType
     
     // Init User
-    init(firstname: String, lastname: String, email: String, password : String) {
+    init(firstname: String, lastname: String, email: String, password : String, usertype: UserType) {
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
         self.password = password
+        self.usertype = usertype
     }
     
     // Public class of the User : Inner class to represent a public view of User (To protect password hashes you should never return them in responses)
