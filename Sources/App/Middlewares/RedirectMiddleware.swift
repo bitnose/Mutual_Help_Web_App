@@ -18,9 +18,7 @@ import Vapor
 final class RedirectMiddleware : Middleware {
     
     func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> { // 1
-        
         if Auth.init(req: request).isAuthenticated() == false { // 2
-        
             throw Abort.redirect(to: "login") // 3
         } else { // 4
             return try next.respond(to: request) // 5

@@ -1,4 +1,7 @@
-#set("content") {
+<!DOCTYPE html>
+<!-- Declare a basic HTML 5 page with head and body. -->
+<html lang="en">
+
      <head>
           <meta charset="UTF-8">
          <h1>#(title)</h1>
@@ -35,5 +38,5 @@
     </button>
 </form>
 </body>
-}
-#embed("base")
+</html>
+

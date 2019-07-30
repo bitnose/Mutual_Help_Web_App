@@ -7,6 +7,13 @@
 
 import Foundation
 
+/// Ad Class which comforms Codable
+/// - id : <UUID?>
+/// - note : <String>
+/// - generosity : <Int>
+/// - images : <[Strings]>?
+/// - show : <Bool> = true
+
 final class Ad : Codable {
     
     var id : UUID?
@@ -15,7 +22,7 @@ final class Ad : Codable {
     var images : [String]?
     var show : Bool = true
     
-    // Initialize
+    /// Initialize
     init(note : String, generosity: Int, images: [String]? = nil, show: Bool = true) {
         
         self.note = note

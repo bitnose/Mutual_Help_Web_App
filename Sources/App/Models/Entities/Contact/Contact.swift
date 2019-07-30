@@ -6,8 +6,12 @@
 //
 
 import Foundation
-// Contact Model
 
+/// Contact Model
+/// - id : <UUID>?
+/// - adLink : <String>
+/// - facebookLink : <String>
+/// - contactName : <String>
 final class Contact : Codable {
     
     var id : UUID?
@@ -15,7 +19,7 @@ final class Contact : Codable {
     var facebookLink : String
     var contactName : String
     
-    // Initialize
+    /// Initialize
     init(adLink : String, facebookLink : String, contactName : String) {
         
         self.adLink = adLink

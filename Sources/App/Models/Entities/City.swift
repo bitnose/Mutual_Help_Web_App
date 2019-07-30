@@ -7,14 +7,15 @@
 
 import Foundation
 
-// City Model
-
+/// City Model which Comforms Codable
+/// - id : <UUID?>
+/// - city : <String>
 final class City : Codable {
     
     var id : UUID?
     var city : String
-   
     
+    /// Initialization
     init(city : String) {
         self.city = city        
     }

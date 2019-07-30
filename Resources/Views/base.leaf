@@ -33,7 +33,7 @@
                         <a href="/countries" class="nav-link">Countries</a>
                     </li>
                     
-                    #if(userLoggedIn) {
+                   
                     <li class="nav-item #if(title == "Create New Ad"){active}">
                         
                         <a href="ads/create" class="nav-link">Create New Ad</a>
@@ -42,8 +42,8 @@
                         
                         <a href="department/all" class="nav-link">Departments</a>
                     </li>
-                    }
-                    #if(!userLoggedIn) {
+                    
+                    
                     <li class="nav-item #if(title == "Register"){active}">
                         
                         <a href="/register" class="nav-link">Register</a>
@@ -51,16 +51,14 @@
                     <li class="nav-item #if(title == "Login"){active}">
                         <a href="/login" class="nav-link">Login</a>
                     </li>
-                    }
+                    
                     
                     
                 </ul>
-                #if(userLoggedIn) {
-                <form class="form-inline" action="/logout" method="POST">
-                    <input class="nav-link btn" type="submit"
-                        value="Log out">
-                </form>
-                }
+                    <li class="nav-link btn">
+                        <a href="/logout" class="nav-link">Logout!</a>
+                    </li>
+                
             </div>
         </nav>
         <div class="container mt-3">

@@ -12,17 +12,20 @@ import Vapor
 ///
 ///     - DefaultsKey is the Name of the Session
 ///     - Request
-///     - Token Getter
+///     - Token
+///         Getter
 ///         - Try to get the token from the session
 ///         - Catch the errors if there are: If yes, return nil
-///     - Token Setter
+///        Setter
 ///         - Add a new token to the session
 ///         - Catch errors if there are: If yes, stop execution and print a message
-///
+///     - Headers : HTTPHeaders = ("application/json")
 final class Auth {
+    
     let defaultsKey = "MH-API-KEY"
     let req: Request
     var token: String? {
+        
         get {
             do {
                 return try req.session()[defaultsKey]
@@ -38,6 +41,8 @@ final class Auth {
             }
         }
     }
+    var headers: HTTPHeaders = [HTTPHeaderName.contentType.description : "application/json"] // 2
+    
 ///
 ///     - Initialization of the Request
 ///
@@ -45,7 +50,7 @@ final class Auth {
         self.req = req
     }
 ///
-///     - Method which returns a boolean value
+///        Method which returns a boolean value
 ///         - True: Token exists in the session
 ///         - False : Token doesn't exist in the session
 ///
@@ -57,7 +62,7 @@ final class Auth {
         }
     }
 ///
-///     - Method to logout the user
+///        Method to logout the user
 ///         - Destroys the current session, if one exists
 ///         - Catch errors if there are: If yes, stop execution and print a message
 ///
@@ -68,4 +73,20 @@ final class Auth {
             fatalError("Cache: Could not destroy session")
         }
     }
+    
+///
+///     - Method which looks if the user is authorized.
+///         - If response HTTPStatusCode is 401 (unauthorized) logout the user and return false 
+///         - Otherwise return true
+///
+    
+    func isAuthorized(response: Response) -> Bool {
+        if response.http.status.code == 401 {
+            Auth(req: req).logout()
+            return false
+        } else {
+            return true
+        }
+    }
+    
 }

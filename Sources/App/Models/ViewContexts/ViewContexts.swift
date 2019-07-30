@@ -14,35 +14,44 @@ import Vapor
 
 
 /// View context for the "landing.leaf"
-/// countries : Array of all future countries
+/// - countries : Array of CountryData
+/// - title : title of the page
 struct CountryContext : Encodable {
     let countries : [CountryData]
     let title : String
 }
-
+/// Context contains data to "landing.leaf"
+/// - county
+//  - departments : Array of departments of the country
 struct CountryData : Encodable {
     let country : Country
     let departments : Future<[Department]>
     
 }
 
-/// View Context for the "adList.leaf"
-///
-/// AdsOfPerimeterData
-///Array of AdObjects
-///Department what was used to make a query
+/// Context Contains data for "adList.leaf"
+/// - data : Ads of Perimeter Data
+/// - showOffer : Boolean value to tell which one to show: Offer or Demands
+struct AdContext : Content {
+    let data : AdsOfPerimeterData
+    let showOffer : Bool
+}
+
+/// Data for the "adList.leaf"
+/// - ads : Array of AdObjects
+/// - selectedDepartment : Selected department
 struct AdsOfPerimeterData : Content {
     let ads : [AdObject]
     let selectedDepartment : Department
 }
-/*
- A New Datatype : AdObject
- - Note of the Ad
- - Demands of the Ad
- - Offers of the Ad
- - City of the Ad
- - Department of the City
- */
+
+/// A New Datatype : AdObject
+/// - Note of the Ad
+/// - Demands of the Ad
+/// - Offers of the Ad
+/// - City of the Ad
+/// - Department of the City
+
 struct AdObject : Content {
     let note : String
     let adID : UUID
@@ -53,15 +62,15 @@ struct AdObject : Content {
 }
 
 
-struct AdContext : Content {
-    let data : AdsOfPerimeterData
-    let showOffer : Bool
-}
 
-/*
- Contains data for "offer.leaf"
- */
-
+/// Contains data for "offer.leaf"
+/// - note : Note of the Ad
+/// - adID : UUID of the Ad
+/// - demands : Array of demands of the ad
+/// - offers : Array of the offers of the ad
+/// - deparment : Deparmant of the city
+/// - city : City of the Ad
+/// - hearts : Count of the likes of the ad
 
 struct AdData : Content {
     let note : String
@@ -75,13 +84,41 @@ struct AdData : Content {
 
 
 /// Contains data for "contact.leaf"
+/// - title of the page
+/// - name : Name of the contact
+/// - messenger : Link to the Facebook Messinger
 struct ContactContext : Encodable {
     let title : String
     let name : String
     let messenger : String
 }
-
+/// Contains data for "index.leaf"
+/// - title of the page
+/// - ads : Array of Future ads
 struct AllAdsContext : Encodable {
     let title : String
     let ads : EventLoopFuture<[Ad]>
 }
+
+
+/// Login context for the login.leaf
+/// - title = "Log in"
+/// - loginError : Bool which tells if there was errors
+struct LoginContext : Encodable {
+    let title = "Log in"
+    let loginError : Bool
+    init(loginError: Bool = false) {
+        self.loginError = loginError
+    }
+}
+
+/// LoginPostData / User's credentials
+/// - username
+//  - password
+struct LoginPostData : Content {
+    let username : String
+    let password : String
+}
+
+
+
