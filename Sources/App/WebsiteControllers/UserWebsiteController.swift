@@ -13,7 +13,7 @@ import Leaf
 /// WebsiteController which handles user routes.
 struct UserWebsiteController : RouteCollection  {
     
-    // Implement boot(router:) as required by RouteCollection.
+    /// Implement boot(router:) as required by RouteCollection.
     func boot(router: Router) throws {
         
         /// A group of routes which handles authentication
@@ -22,20 +22,15 @@ struct UserWebsiteController : RouteCollection  {
         /// Routes which requires users to be authenticated. If user is not authenticated, it redirects user to the "login" page.
         let protectedRoutes = userRoutes.grouped(RedirectMiddleware())
         
-        
-        /*
-         1. GET request - Get the login view.
-         2. POST request - Post LoginPostData to the API to auhtenticate the user.
-         3. Protected GET request - Get the index page
-         4. Protected GET request - Logout user and go back to the login page.
-        */
-        
+        /// 1. GET request - Get the login view.
+        /// 2. POST request - Post LoginPostData to the API to auhtenticate the user.
+        /// 3. Protected GET request - Get the index page
+        /// 4. Protected GET request - Logout user and go back to the login page.
+ 
         userRoutes.get("login", use: loginHandler) // 1
         userRoutes.post(LoginPostData.self, at: "login", use: signInPostHandler) // 2
         protectedRoutes.get("index", use: indexHandler) // 3
         protectedRoutes.get("logout", use: logoutPostHandler) // 4
-        
-        
     }
     
     
@@ -114,10 +109,8 @@ struct UserWebsiteController : RouteCollection  {
     
     func indexHandler(_ req: Request) throws -> Future<View> {
         
-        
-        
         let auth = Auth(req: req) //
-        guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "login")} // 1
+        guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "/login")} // 1
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 3
         
         let client = try req.make(Client.self) // 4
@@ -130,11 +123,11 @@ struct UserWebsiteController : RouteCollection  {
                 return try req.view().render("index", context) // 9
                 
             } else { // 10
-                throw Abort.redirect(to: "login")
+                throw Abort.redirect(to: "/login")
             }
         }.catchMap({ error in // 11
             auth.logout() // 12
-            throw Abort.redirect(to: "login") // 13
+            throw Abort.redirect(to: "/login") // 13
         })
     }
     
@@ -150,7 +143,7 @@ struct UserWebsiteController : RouteCollection  {
     func logoutPostHandler(_ req: Request) throws -> Future<Response> {
         
         let auth = Auth(req: req) // 1
-        guard let token = Auth(req: req).token else { auth.logout(); throw Abort.redirect(to: "login")} // 2
+        guard let token = Auth(req: req).token else { auth.logout(); throw Abort.redirect(to: "/login")} // 2
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 3
         
         let client = try req.make(Client.self) // 4
@@ -158,13 +151,16 @@ struct UserWebsiteController : RouteCollection  {
             // 6
             auth.logout()
             print("User has loged out")
-            return req.redirect(to: "login")
+            return req.redirect(to: "/login")
             
         // 7
         }.catchMap { error in
             auth.logout()
             print("User has loged out with catchmap")
-            throw Abort.redirect(to: "login")
+            throw Abort.redirect(to: "/login")
         }
     }
+    
+    
+    
 }

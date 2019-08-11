@@ -1,5 +1,5 @@
 $.ajax({
-       url: "/api/ads/#(ad.id)/demands/",
+       url: "http://localhost:9090/api/ads/#(ad.id)/demands",
        type: "GET",
        contentType: "application/json; charset=utf-8"
        }).then(function (response) {
@@ -24,7 +24,7 @@ $.ajax({
                                        });
                });
 $.ajax({
-       url: "/api/ads/#(ad.id)/offers",
+       url: "http://localhost:9090/api/ads/#(ad.id)/offers",
        type: "GET",
        contentType: "application/json; charset=utf-8"
        }).then(function (response) {
@@ -52,7 +52,7 @@ $.ajax({
 
 
 $.ajax({
-       url: "/api/cities",
+       url: "http://localhost:9090/api/cities",
        type: "GET",
        contentType: "application/json; charset=utf-8"
        }).then(function (response) {
@@ -76,7 +76,7 @@ $.ajax({
                });
 
 $.ajax({
-       url: "/api/departments/sorted",
+       url: "http://localhost:9090/api/departments/sorted",
        type: "GET",
        contentType: "application/json; charset=utf-8"
        }).then(function (response) {
@@ -91,7 +91,7 @@ $.ajax({
                };
                dataToReturn.push(newTag);
                }
-               $("#department").select2({
+               $("#adInfo.department").select2({
                                         
                                         placeholder: "Select Department for the Ad",
                                         
@@ -103,7 +103,7 @@ $.ajax({
 
 
 $.ajax({
-       url: "/api/departments/sorted",
+       url: "http://localhost:9090/api/departments/sorted",
        type: "GET",
        contentType: "application/json; charset=utf-8"
        }).then(function (response) {

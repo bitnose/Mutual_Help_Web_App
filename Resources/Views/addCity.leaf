@@ -1,0 +1,39 @@
+#set("content") {
+<h1>#(title)</h1>
+
+<form method="post">
+
+#if(csrfToken) {
+<input type="hidden" name="csrfToken" value="#(csrfToken)">
+}
+
+
+<div class="form-group">
+<label for="city">City</label>
+<input type="text" name="city" class="form-control"
+id="city"/>
+</div>
+<div class="form-group">
+<label for="departmentID">Department</label>
+
+<select name="departmentID" class="form-control" id="departmentID">
+
+#for(department in departments) {
+<option value="#(department.id)">
+#(department.departmentNumber) #(department.departmentName)
+</option>
+}
+</select>
+</div>
+
+
+<button type="submit" class="btn btn-primary">
+Add City
+</button>
+</form>
+}
+
+#embed("base")
+
+
+

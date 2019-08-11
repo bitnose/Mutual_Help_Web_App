@@ -1,0 +1,50 @@
+#set("content") {
+<p><h1>#(title)</h1></p>
+
+<p><h4>Department: #(cityDepartment.department.departmentName)</h4></p>
+<p><h4>City: #(cityDepartment.city.city)</h4></p>
+<p><h4>Contact: #(contact.contactName)</h4></p>
+
+<form method="post">
+
+#if(csrfToken) {
+<input type="hidden" name="csrfToken" value="#(csrfToken)">
+}
+
+<p> <label for="demands"> Demands </label> </p>
+<p> <div class="container1">
+<button class="add_form_field1">Add Demand&nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
+<div><input type="text" name="demands[]" id="demands"></div>
+</div></p>
+
+
+<p> <label for="offers"> Offers </label> </p>
+<p><div class="container2">
+<button class="add_form_field2">Add Offer&nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
+<div><input type="text" name="offers[]" id="offers"> #if(editing){
+#for(offer in offers){value="#(offer.offer)"}} </div>
+</div></p>
+
+<p><div class="form-group">
+<p> <label for="note"> Notes </label></p>
+<input type="text" name="note" class="form-control"
+id="note" #if(editing){value="#(ad.note)"}/>
+</div></p>
+
+<p><div class="col-xs-2">
+<p> <label for="generosity">Generosity of the Ad:</label></p>
+<div><input type="number" name="generosity"
+id="generosity"  min="0" max="100" class="form-control"/></div>
+</div></p>
+
+<p><button type="submit" class="btn btn-primary">
+#if(editing){Update} else{Submit}
+</button></p>
+
+
+</form>
+
+}
+#embed("base")
+
+

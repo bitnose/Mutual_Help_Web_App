@@ -12,9 +12,10 @@ final class Demand : Codable {
     
     var id : UUID?
     var demand : String
+    var adID : UUID
     
-    init(demand : String) {
+    init(demand : String, adID: UUID) {
         self.demand = demand
-       
+        self.adID = adID
     }
 }

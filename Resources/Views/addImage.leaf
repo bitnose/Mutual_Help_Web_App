@@ -1,0 +1,30 @@
+#set("content") {
+
+<h1>#(title)</h1>
+
+#if(csrfToken) {
+<input type="hidden" name="csrfToken" value="#(csrfToken)">
+}
+
+<form method="post", action="/#(adID)/image", enctype="multipart/form-data">
+
+<div class="form-group">
+<label>
+Select Image for Ad
+</label>
+<input type="file" name="image"
+class="form-control-file" id="image"/>
+</div>
+
+<button type= "submit" class="btn btn-primary">
+Upload
+</button>
+
+<a class="btn" href="/#(adID)">Go to Ad</a>
+
+</form>
+}
+
+
+#embed("base")
+

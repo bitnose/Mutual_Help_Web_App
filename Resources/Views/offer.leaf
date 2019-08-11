@@ -39,7 +39,7 @@
                         
                         <div id="likeIcon" class="iconDefault">
                             <form method="post">
-                                <button id="likeIcon"><img src="/Images/MyHeart.png", <a href="/#(ad.id)/heart"></a></button>
+                                <button id="likeIcon"><img src="/Images/MyHeart.png", <a href="/#(adID)/heart"></a></button>
                             </form>
                             <h6>#(hearts)</h6>
                         </div>
@@ -48,7 +48,7 @@
                             <h2>#(department.departmentName) (#(department.departmentNumber))</h2>
                             <h3>#(city.city)</h3>
                         </div>
-                        <a href="/#(ad.id)/contact">
+                        <a href="/#(adID)/contact">
                             <div id="contactIcon" class="iconDefault"><img src="/Images/LittleGuy.png" /><h6>Contacter!</h6></div>
                         </a>
                     </div>
@@ -77,13 +77,13 @@
                         </div>
                     </div>
                     <div id="offerViewIcons">
-                        <!--
-                        #if(ad.images) {
-                        <a href="/#(ad.id)/showimages">
+
+                        #if(images) {
+                        <a href="images/#(adID)">
                             <div id="photoIcon"><img src="/Images/Photo.png" /></div>
                         </a>
                         }
-                        -->
+
                         <div id="moreInfoIcon"><img src="/Images/MoreInfo.png" /></div>
                     </div>
                 </div>

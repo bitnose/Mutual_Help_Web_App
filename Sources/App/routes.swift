@@ -15,4 +15,6 @@ public func routes(_ router: Router) throws {
     let userWebsiteController = UserWebsiteController() // 1
     try router.register(collection: userWebsiteController) // 2
     
+    let adminWebsiteController = AdminWebsiteController()
+    try router.register(collection: adminWebsiteController)
 }

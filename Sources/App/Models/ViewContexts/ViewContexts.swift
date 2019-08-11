@@ -21,7 +21,7 @@ struct CountryContext : Encodable {
     let title : String
 }
 /// Context contains data to "landing.leaf"
-/// - county
+/// - country
 //  - departments : Array of departments of the country
 struct CountryData : Encodable {
     let country : Country
@@ -79,7 +79,39 @@ struct AdData : Content {
     let offers : [Offer]
     let department : Department
     let city : City
-    let hearts : Int   
+    let hearts : Int
+    let images : [String]?
+}
+
+/// Contains data for "offer.leaf"
+/// - note : Note of the Ad
+/// - adID : UUID of the Ad
+/// - demands : Array of demands of the ad
+/// - offers : Array of the offers of the ad
+/// - deparment : Deparmant of the city
+/// - city : City of the Ad
+/// - hearts : Count of the likes of the ad
+
+struct AdInfoData : Content {
+    let note : String
+    let adID : UUID
+    let demands : [Demand]
+    let offers : [Offer]
+    let department : Department
+    let city : City
+    let hearts : Int
+    let images : [String]?
+    let show : Bool
+    let createdAt : Date
+    let generosity : Int
+    
+}
+
+struct FullAdContext : Encodable {
+    let title : String
+    let adInfo : AdInfoData
+    let contact : Future<Contact>
+    let csrfToken : String?
 }
 
 
@@ -120,5 +152,142 @@ struct LoginPostData : Content {
     let password : String
 }
 
+/// Data to Add a new Country
+///  - country : name of the country
+struct CountryPostData : Content {
+    let country : String
+    let csrfToken : String?
+}
+
+/// CSRFToken Context
+/// - title : Title of the page
+/// - csrfToken : token to protect against CSRF attacks
+struct CSRFTokenContext : Encodable {
+    let title : String
+    let csrfToken : String?
+}
 
 
+/// Data to Add a new Department
+///  - departmentName : name of the department
+///  - departmentNumber : Number of the department
+///  - countryID : Country of the Deparment
+///  - csrfToken : token to protect against CSRF attacks
+struct DepartmentPostData : Content {
+    let departmentName : String
+    let departmentNumber : Int
+    let countryID : UUID
+    let csrfToken : String?
+}
+
+/// Add Department Context
+/// - array of Future Countries
+/// - title : Title of the page
+/// - csrfToken : token to protect against CSRF attacks
+struct AddDepartmentContext : Encodable {
+    let countries : EventLoopFuture<[Country]>
+    let title : String
+    let csrfToken : String?
+}
+
+/// Add a city context
+///  - title
+///  - departments : Array of Future Departments
+/// csrfToken : Optional string
+struct AddCityContext : Encodable {
+    let title : String
+    let departments : EventLoopFuture<[Department]>
+    let csrfToken : String?
+}
+
+
+/// Add a city context
+///  - title
+///  - departmentID : Department of the city (UUID)
+/// csrfToken : Optional string
+struct AddCityData : Content {
+    let city : String
+    let departmentID : UUID
+    let csrfToken : String?
+}
+
+
+/// Add a city data
+/// - csrfToken : Optional string
+/// - contactName
+/// - adLink
+/// - facebookLink
+struct AddContactData : Content {
+
+    let csrfToken : String?
+    let contactName : String
+    let adLink : String
+    let facebookLink : String
+}
+
+
+/// Add a city data
+/// - csrfToken : Optional string
+/// - contact
+/// - department
+/// - citu
+struct AddAdContext : Encodable {
+    let title : String
+    let csrfToken : String?
+    let contact : EventLoopFuture<Contact>
+    let cityDepartment : EventLoopFuture<CityDepartment>
+}
+
+/// CityDepartment Data type
+/// - department
+/// - city
+struct CityDepartment : Content {
+    let city: City
+    let department : Department
+}
+
+/// Data type contains data to create a contact
+/// - csrfToken : Optional string
+struct AdPostData : Content {
+    let csrfToken : String?
+    let generosity : Int
+    let note : String
+    let demands : [String]?
+    let offers : [String]?
+}
+
+/// ImageContect : Contains data for addImage -view.
+/// - title : String
+/// - csrfToken : Optional token
+struct ImageContext : Encodable {
+    let title : String
+    let csrfToken : String?
+    let adID : UUID
+}
+
+/// ImagePostData from the view.
+/// - image : Data
+/// - csrfToken : Optional token to protect against csrf -attacks.
+struct ImagePostData : Content {
+    let image : Data
+    let csrfToken : String?
+}
+
+/// ImageData is a new data type which contains data to post image data.
+/// - image : Data
+/// - adID : Optional UUID
+struct ImageData : Content {
+    let image : Data
+    let adID : UUID?
+}
+
+
+/// Data type contains data for image.leaf -view.
+/// - title <String> : Title of the page
+/// - imagesLinks Array<String> : Array of the Strings
+/// - adID <UUID> : id of the selected ad.
+struct ImageLinksContext : Encodable {
+    let title : String
+    let imagesLinks : [String]
+    let adID : UUID
+}

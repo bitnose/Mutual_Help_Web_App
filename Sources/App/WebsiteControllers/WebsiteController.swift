@@ -39,6 +39,8 @@ struct WebsiteController : RouteCollection {
         websiteRoutes.get("ads", "contact", String.parameter, use: getContactHandler) // 4.
         websiteRoutes.get("countries", "ads", String.parameter, UUID.parameter, use: adsOfPerimeterHandler) // 5.
         websiteRoutes.post("ads", UUID.parameter, use: heartPostHandler)
+        websiteRoutes.get("ads", "images", UUID.parameter, use: getImagesHandler)
+        
      
     }
     
@@ -230,12 +232,42 @@ struct WebsiteController : RouteCollection {
         // 5.
         return client.post("http://localhost:9090/api/hearts", beforeSend: { req in
             let data = Heart(token: heartToken!, adID: adID)
-            try req.content.encode(data, as: .json)
+           try req.content.encode(data, as: .json) 
             
         }).map(to: Response.self) { res in // 6.
             return req.redirect(to: "\(adID)")
             }
         }
+    
+    
+    /* Function to return the image view:
+     1. Get a imageURL by calling the function to prepare url. Because the function might throw do it in a do - catch block to catch errors if those occur.
+     2. Create a context and pass by the title and the imageURL
+     3. Return and render the showImage -leaf with the context
+     4. Catch errors if there are any and print them out.
+     */
+    
+    func getImagesHandler(_ req: Request) throws -> Future<View> {
+        
+        let adID = try req.parameters.next(UUID.self)
+        
+        let client = try req.make(Client.self) // 2.
+        
+        
+        return client.get("http://localhost:9090/aws/\(adID)/images").flatMap(to: View.self) { res in // 4.
+            return try res.content.decode([String].self).flatMap(to: View.self) { data in // 5.
+                
+        
+                let context = ImageLinksContext(title: "Images", imagesLinks: data, adID: adID)
+                return try req.view().render("images", context) // 8.
+                
+            }
+        }
+
+    }
+    
+  
+    
 }
 
 /*
@@ -248,5 +280,3 @@ struct DepartmentFilters: Content {
     var country: String?
     var department: String?
 }
-
-

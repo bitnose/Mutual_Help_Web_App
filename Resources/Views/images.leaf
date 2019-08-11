@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+            <title> #(title) </title>
+            
+            <base href="" />
+            <link rel="stylesheet" href="/styles/pays.css" type="text/css" />
+            <link rel="stylesheet" href="/styles/pays_form.css" type="text/css" />
+            
+            <!-- <script type="text/javascript" src="script/jquery-3.3.1.min.js"></script> -->
+            <!-- <script type="text/javascript" src="script/pays.js"></script> -->
+            
+            <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0" />
+            </head>
+    <body>
+        <div id="scrollContent">
+            <div id="centerFrame">
+                <div id="introheader">
+                    #for(link in imagesLinks) {
+                    <img src="#(link)"/>
+                    }
+                </div><div id="content">
+                </div>
+            </div>
+            <div id="footerMobileFrame"><div id="footerMobile"><div id="footerLogo">
+                <p>&copy; 2019 gilets-jaunes-entraide.fr</p><a href="/countries"><img src="/Images/logo.svg" /></a>
+            </div></div></div>
+        </div>
+        <div id="footer"></div>
+        <!-- Script -->
+        <script src="/script/footer.js"></script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

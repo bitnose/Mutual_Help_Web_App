@@ -13,8 +13,6 @@
                         
                         
                         
-                        
-                        
                         <title>#(title)</title>
     </head>
     <body>
@@ -30,27 +28,26 @@
                 id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item #if(title == "Countries"){active}">
-                        <a href="/countries" class="nav-link">Countries</a>
+                        <a href="/countries" class="nav-link">Landing</a>
+                    </li>
+                    <li class="nav-item #if(title == " Countries and Departments"){active}">
+                        <a href="/countries/all" class="nav-link"> Countries and Departments</a>
+                    </li>
+                    <li class="nav-item #if(title == "Add Country"){active}">
+                        
+                        <a href="/add/country" class="nav-link">Add Country</a>
                     </li>
                     
+                    <li class="nav-item #if(title == "Add Department"){active}">
+                        
+                        <a href="/add/department" class="nav-link">Add Department</a>
+                    </li>
                    
                     <li class="nav-item #if(title == "Create New Ad"){active}">
                         
-                        <a href="ads/create" class="nav-link">Create New Ad</a>
+                        <a href="/add/city" class="nav-link">Create New Ad</a>
                     </li>
-                    <li class="nav-item #if(title == "All the Departments"){active}">
-                        
-                        <a href="department/all" class="nav-link">Departments</a>
-                    </li>
-                    
-                    
-                    <li class="nav-item #if(title == "Register"){active}">
-                        
-                        <a href="/register" class="nav-link">Register</a>
-                    </li>
-                    <li class="nav-item #if(title == "Login"){active}">
-                        <a href="/login" class="nav-link">Login</a>
-                    </li>
+                
                     
                     
                     

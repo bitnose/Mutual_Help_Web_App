@@ -13,6 +13,8 @@ import Foundation
 /// - generosity : <Int>
 /// - images : <[Strings]>?
 /// - show : <Bool> = true
+/// - contactID : UUID
+/// - cityID : UUID
 
 final class Ad : Codable {
     
@@ -21,13 +23,17 @@ final class Ad : Codable {
     var generosity : Int
     var images : [String]?
     var show : Bool = true
+    var contactID : UUID
+    var cityID : UUID
     
     /// Initialize
-    init(note : String, generosity: Int, images: [String]? = nil, show: Bool = true) {
+    init(note: String, generosity: Int, images: [String]? = nil, show: Bool = true, contactID: UUID, cityID: UUID) {
         
         self.note = note
         self.generosity = generosity
         self.images = images
         self.show = show
+        self.contactID = contactID
+        self.cityID = cityID
     }
 }
