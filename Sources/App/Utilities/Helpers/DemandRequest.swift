@@ -17,7 +17,7 @@ struct DemandRequest {
     
     init(ending: String) {
         /// Creates an url combining the resourceString and resource URL
-        let resourceString = "http://locahost:9090/api/demands/\(ending)"
+        let resourceString = "http://localhost:9090/api/demands/\(ending)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

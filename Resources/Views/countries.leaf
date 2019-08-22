@@ -3,24 +3,29 @@
 <h1>#(title)</h1>
 #if(countries) {
 <tbody>
-#for(data in countries) {
-<p>
-<h3><a href="#(country.id)"> #(data.country.country)</a></h3>
-<p>
-#for(department in data.departments) {
-<ul>
-<li>
-    <td><a href="#(department.id)"> #(department.departmentNumber) #(department.departmentName)</a></td>
-</li>
-</ul>
-}
-}
-</body>
-} else {
-<h2> There aren't any ads yet!</h2>
-}
-}
-
-#embed("base")
-
+    #for(data in countries) {
+    <p>
+    <h3><a href="#(country.id)"> #(data.country.country)</a></h3>
+    <p>
+    #for(department in data.departments) {
+    <ul>
+        <li>
+            <td><a href="#(department.id)"> #(department.departmentNumber) #(department.departmentName)</a></td>
+        </li>
+    </ul>
+    }
+    
+    
+    <button type="button"><a href="/departments/perimeter">Create perimeter</a></button>
+    
+    }
+    </body>
+    } else {
+    <h2> There aren't any ads yet!</h2>
+    }
+    }
+    
+    #embed("base")
+    
+    
 

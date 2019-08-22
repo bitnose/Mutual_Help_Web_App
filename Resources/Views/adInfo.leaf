@@ -1,0 +1,72 @@
+#set("content") {
+
+
+
+<title>#(title)</title>
+
+<p> <h1> Ad Info </h1> </p>
+
+<h2>(#(adInfo.department.departmentNumber)) #(adInfo.department.departmentName)</h2>
+
+<h4>#(adInfo.city.city)</h4>
+
+
+
+</p><h4>Contact Details  :</h4h>
+    <h5><ul>
+        <li>#(contact.contactName)</li>
+        <li>#(contact.adLink)</li>
+        <li>#(contact.facebookLink)</li>
+        </h5></ul></p>
+    <h4>Likes: #(adInfo.hearts)</h4>
+    <h4>Generosity 😇: #(adInfo.generosity)</h4>
+     <h4>created At : #(adInfo.createdAt)</h4>
+    
+    </p> #if(count(adInfo.offers) > 0) {
+    <h2>Offres</h2>
+    #for(offer in adInfo.offers) {
+    <ul>
+        <li>#(offer.offer)</li>
+    </ul>
+    }
+    }</p>
+    
+    </p>  #if(count(adInfo.demands) > 0) {
+    <h2>Demands</h2>
+    #for(demand in adInfo.demands) {
+    <ul>
+        <li>#(demand.demand)</li>
+        
+    </ul>
+    }
+    }</p>
+    
+    #if(adInfo..images) {
+    <a href="/images/#(adInfo.adID)">
+        <div>📷<h5>Images!</h5></div>
+    </a>
+    }
+    
+    <h4>Special note: #(adInfo.note)</h4>
+   
+    <form method="post">
+
+    #if(csrfToken) {
+        <input type="hidden" name="csrfToken" value="#(csrfToken)">
+    }
+
+
+            <a class="btn btn-primary" href="/#(adInfo.adID)/edit"
+                role="button">Edit</a>&nbsp;
+            <a class="btn btn-primary" href="/#(adInfo.adID)/edit/images"
+                role="button">Edit Images</a>&nbsp;
+            <input class="btn btn-danger" type="submit" value="Delete"/>
+            </form>
+    
+    
+    
+    
+    }
+    
+    #embed("base")
+

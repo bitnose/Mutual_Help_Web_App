@@ -18,7 +18,7 @@ struct OfferRequest {
     
     init(ending: String) {
         /// Creates an url combining the resourceString and resource URL
-        let resourceString = "http://locahost:9090/api/offers/\(ending)"
+        let resourceString = "http://localhost:9090/api/offers/\(ending)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

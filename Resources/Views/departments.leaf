@@ -1,0 +1,22 @@
+#set("content") {
+
+<h1>#(title)</h1>
+#if(departments) {
+<table class="table table-bordered table-hover">
+    <tbody>
+        #for(department in departments) {
+        <tr>
+            <td><a href="#(department.id)"> #(department.departmentNumber) #(department.departmentName)</a></td>
+        </tr>
+        
+        }
+        </body>
+</table>
+} else {
+<h2> There aren't any departments yet!</h2>
+}
+}
+
+#embed("base")
+
+

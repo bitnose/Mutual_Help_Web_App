@@ -2,7 +2,7 @@
 
 <title>#(title)</title>
 
-<form method="post">
+<form method="post" >
     
     #if(csrfToken) {
     <input type="hidden" name="csrfToken" value="#(csrfToken)">
@@ -11,34 +11,21 @@
         <h1> Edit Location </h1>
         
         <div class="form-group">
-            <label for="city">City</label>
+            <label for="cityID">City</label>
             
-            <select name="city" class="form-control"
-                id="city" placeholder="City">
+            <select name="cityID" class="form-control"
+                id="cityID" placeholder="City">
     
-                <option value="#(adInfo.city.city)" selected="selected">
-                    #(adInfo.city.city)
+                #for(city in cities) {
+                <option value="#(city.id)">
+                    #(city.city)
                 </option>
+                }
             </select>
         </div>
-        
-        <div class="form-group">
-            <label for="department">Department</label>
-            
-            <select name="department" class="form-control"
-                id="department" placeholder="Department">
-                <option value="#(adInfo.department.departmentName)" selected="selected">
-                    #(adInfo.department.departmentName)
-                </option>
-            </select>
-        </div>
-        
-        
-        
-        
-        
+        <input type="hidden" name="adID" value="#(adInfo.adID)">
         <h1> Edit Contact </h1>
-        <input type="hidden" name="contact" value="#(contact.id)">
+        <input type="hidden" name="contactID" value="#(contact.id)">
             
             <div class="form-group">
                 <label for="contactName">Name</label>
@@ -58,9 +45,6 @@
                 id="facebookLink" value="#(contact.facebookLink)"/>
             </div>
             
-            
-            
-            
             <h1> Edit Demands </h1>
             
             
@@ -73,6 +57,7 @@
                 }
             </div></p>
             
+             <h1> Edit Offers </h1>
             
             <p> <label for="offers"> Offers </label> </p>
             <p><div class="container2">

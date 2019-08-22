@@ -25,3 +25,5 @@ final class Department : Codable {
     }
 }
 
+
+extension Department : Content {}

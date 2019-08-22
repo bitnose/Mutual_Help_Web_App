@@ -13,6 +13,13 @@ import Vapor
 /// MARK: - Declaration of the New Data Types
 
 
+/// Data Type contains data to make an api request to delete data
+/// - adID : The id of the ad which will be deleted
+/// - csrfToken : Optional token to protect agains csrf attacks
+struct CsrfToken : Content {
+    let csrfToken : String?
+}
+
 /// View context for the "landing.leaf"
 /// - countries : Array of CountryData
 /// - title : title of the page
@@ -93,6 +100,7 @@ struct AdData : Content {
 /// - hearts : Count of the likes of the ad
 
 struct AdInfoData : Content {
+    let csrfToken: String?
     let note : String
     let adID : UUID
     let demands : [Demand]
@@ -101,17 +109,68 @@ struct AdInfoData : Content {
     let city : City
     let hearts : Int
     let images : [String]?
-    let show : Bool
     let createdAt : Date
     let generosity : Int
-    
 }
+
+
+struct AdInfoPostData : Content {
+    let csrfToken: String?
+    let note : String
+    let adID : UUID
+    let demands : [String]
+    let offers : [String]
+    let cityID : UUID
+    let generosity : Int
+    let contactID : UUID
+    let contactName : String
+    let facebookLink : String
+    let adLink : String
+}
+
+
+
+
+
 
 struct FullAdContext : Encodable {
     let title : String
     let adInfo : AdInfoData
     let contact : Future<Contact>
     let csrfToken : String?
+    let cities : Future<[City]>?
+}
+
+
+/// Edit Ad - Data type
+/// - note : Note of the Ad
+/// - adID : UUID of the Ad
+/// - demands : Array of demands of the ad
+/// - offers : Array of the offers of the ad
+/// - deparment : Deparmant of the city
+/// - city : City of the Ad
+/// - hearts : Count of the likes of the ad
+/// - images : Optional array of Strings
+/// - generosity : Integer value to measure the generosity of the ad
+/// - adLink : Link to the ad in the facebook
+/// - facebookLink : Link to the contact's facebook messenger
+/// - contactName : Name of the contact
+
+struct  EditAdData : Content {
+    let csrfToken: String?
+    let note : String
+    let adID : UUID
+    let demands : [Demand]
+    let offers : [Offer]
+    let department : Department
+    let city : City
+    let hearts : Int
+    let images : [String]?
+    let generosity : Int
+    var adLink : String
+    var facebookLink : String
+    var contactName : String
+
 }
 
 
@@ -172,13 +231,32 @@ struct CSRFTokenContext : Encodable {
 ///  - departmentName : name of the department
 ///  - departmentNumber : Number of the department
 ///  - countryID : Country of the Deparment
-///  - csrfToken : token to protect against CSRF attacks
+///  - csrfToken : A token to protect against CSRF attacks
 struct DepartmentPostData : Content {
     let departmentName : String
     let departmentNumber : Int
     let countryID : UUID
     let csrfToken : String?
 }
+
+/// Data type which contains data to create a perimeter
+/// - department : Selected department
+/// - departments : Array of the neighbour departments
+/// - csrfToken : A token to protect against CSRF attacks
+struct CreatePerimeterPostData : Content {
+    let departmentID : UUID
+    let departmentIDs : [UUID]
+    let csrfToken : String?
+}
+
+/// Data type contains data for the API request to create a perimeter.
+/// - department : Selected department (a center of the perimeter)
+/// - departments : Array of the selected departments (departments around of the selected department)
+struct PerimeterPostData : Content {
+    let departmentID : UUID
+    let departmentIDs : [UUID]
+}
+
 
 /// Add Department Context
 /// - array of Future Countries
@@ -193,8 +271,8 @@ struct AddDepartmentContext : Encodable {
 /// Add a city context
 ///  - title
 ///  - departments : Array of Future Departments
-/// csrfToken : Optional string
-struct AddCityContext : Encodable {
+///  - csrfToken : Optional string
+struct DepartmentsContext : Encodable {
     let title : String
     let departments : EventLoopFuture<[Department]>
     let csrfToken : String?
@@ -261,8 +339,8 @@ struct AdPostData : Content {
 /// - csrfToken : Optional token
 struct ImageContext : Encodable {
     let title : String
-    let csrfToken : String?
     let adID : UUID
+    let csrfToken : String?
 }
 
 /// ImagePostData from the view.

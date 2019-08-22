@@ -21,7 +21,7 @@ struct AdminWebsiteController : RouteCollection {
         /// Routes which requires users to be authenticated. If user is not authenticated, it redirects user to the "login" page.
         let protectedRoutes = userRoutes.grouped(RedirectMiddleware())
         
-        //    1. This creates a new route group, extending from authSessionRoutes that includes RedirectMiddleware. The application runs a request through RedirectMiddleware before it reaches the route handler, but after AuthenticationSessionMiddleware. This allows RedirectMiddleware to chech for an authenticated user. RedirectMiddleware requires you to specify the path for redirecting unauthenticated users and the Authenticatabke type to check for. In this case, that's your User model.
+        // This creates a new route group, extending from authSessionRoutes that includes RedirectMiddleware. The application runs a request through RedirectMiddleware before it reaches the route handler, but after AuthenticationSessionMiddleware. This allows RedirectMiddleware to chech for an authenticated user. RedirectMiddleware requires you to specify the path for redirecting unauthenticated users and the Authenticatabke type to check for. In this case, that's your User model.
         //
         //    2. Get Request - GET VIEW TO CREATE CITIES
         //    3. Post Request - POST CITY
@@ -29,39 +29,43 @@ struct AdminWebsiteController : RouteCollection {
         //    5. Post Request - POST CONTACT
         //    6. Get Request - GET VIEW TO CREATE AD
         //    7. Post Request - POST AD
-        //    8. Get Request - GET INDEX VIEW OF THE PROTECTED ROUTES (ALL THE ADS)
-        //    9. Get Request - GET VIEW TO AD IMAGES
-        //    10. Post Request - POST IMAGES TO THE AD
-        //    11. Get Request - GET EDIT AD VIEW
-        //    12. Post Request - POST THE EDITED AD
-        //    13. Get Request - GET AD WITH IT'S ALL THE RELATIONAL DATA
-        //    14. Post Request - UPDATE THE SHOW PARAMETER OF THE AD
-        //    15. Post Request - POST TO DELETE SELECTED AD
-        //    16. Get Request - GET VIEW TO ADD/REMOVE RELATIONSHIPS BETWEEN DEPARTMENTS
-        //    17. Post Request - POST PERIMETERDATA (DATA TO REMOVE/CREATE RELATIONSHIPS BETWEEN DEPARTMENTS)
+        //    8. Get Request - GET VIEW TO GET ALL COUNTRIES
+        //    9. Get Request - GET VIEW TO CREATE COUNTRY
+        //    10. Post Request - POST COUNTRY
+        //    11. Get Request - GET VIEW TO CREATE DEPARTMENTS
+        //    12. Post Request - POST DEPARTMENT
+        //    13. Get Request - GET VIEW TO ADD IMAGES TO THE AD
+        //    14. Post Request - POST IMAGES TO THE AD
+        //    15. Get Request - GET AD WITH IT'S DATA
+        //    16. Get Request - GET EDIT AD VIEW
+        //    17. Post Request - POST THE EDITED AD
+        //    18. Get Request - GET VIEW TO CREATE PERIMETER
+        //    19. Post Request - POST THE PERIMETER DATA
+        //    20. Post Request - POST TO DELETE SELECTED AD
         //    18. Get Request - GET THE SELECTED DEPARTMENT
-        //    19. Get Request - GET ALL THE DEPARTMENTS
-        //    20. Get Request - GET IMAGES
-        //    21. Get Request - GET VIEW TO CREATE COUNTRIES
-        //    22. Post Request - POST COUNTRY
-        //    23. Get Request - GET VIEW TO CREATE DEPARTMENTS
-        //    24. Post Request - POST DEPARTMENT
+
+
+     
     
         protectedRoutes.get("add", "city", use: addCityHandler) // 2
         protectedRoutes.post(AddCityData.self, at: "add", "city", use: addCityPostHandler) // 3
         protectedRoutes.get("add", "city", UUID.parameter, "contact", use: addContactHandler) // 4
-        protectedRoutes.post(AddContactData.self, at: "add", "city", UUID.parameter, "contact", use: addContactPostHandler)
-        protectedRoutes.get("add", "city", UUID.parameter, "contact", UUID.parameter, use: addAdHandler)
-        protectedRoutes.post(AdPostData.self, at: "add", "city", UUID.parameter, "contact", UUID.parameter, use: addAdPostHandler)
-        protectedRoutes.get("countries", "all", use: countriesHandler)
-        protectedRoutes.get("add", "country", use: addCountryHandler) // 21
-        protectedRoutes.post(CountryPostData.self, at: "add", "country", use: addCountryPostHandler) // 22
-        protectedRoutes.get("add", "department", use: addDepartmentHandler) // 23
-        protectedRoutes.post(DepartmentPostData.self, at: "add", "department", use: addDepartmentPostHandler) // 24
-       protectedRoutes.post(ImagePostData.self, at: UUID.parameter, "image", use: addImagePostHandler)
-        protectedRoutes.get(UUID.parameter, "image", use: addImageHandler)
-        protectedRoutes.get(UUID.parameter, "info" , use: getFullAdHandler)
-        protectedRoutes.get(UUID.parameter, "edit", use: editAdHandler)
+        protectedRoutes.post(AddContactData.self, at: "add", "city", UUID.parameter, "contact", use: addContactPostHandler) // 5
+        protectedRoutes.get("add", "city", UUID.parameter, "contact", UUID.parameter, use: addAdHandler) // 6
+        protectedRoutes.post(AdPostData.self, at: "add", "city", UUID.parameter, "contact", UUID.parameter, use: addAdPostHandler) // 7
+        protectedRoutes.get("countries", "all", use: countriesHandler) // 8
+        protectedRoutes.get("add", "country", use: addCountryHandler) // 9
+        protectedRoutes.post(CountryPostData.self, at: "add", "country", use: addCountryPostHandler) // 10
+        protectedRoutes.get("add", "department", use: addDepartmentHandler) // 11
+        protectedRoutes.post(DepartmentPostData.self, at: "add", "department", use: addDepartmentPostHandler) // 12
+        protectedRoutes.get(UUID.parameter, "image", use: addImageHandler) // 13
+        protectedRoutes.post(ImagePostData.self, at: UUID.parameter, "image", use: addImagePostHandler) // 14
+        protectedRoutes.get(UUID.parameter, "info" , use: getFullAdHandler) // 15
+        protectedRoutes.get(UUID.parameter, "edit", use: editAdHandler) // 16
+        protectedRoutes.post(AdInfoPostData.self, at: UUID.parameter, "edit", use: editAdPostHandler) // 17
+        protectedRoutes.get("departments", "perimeter", use: createPerimeterHandler) // 18
+        protectedRoutes.post(CreatePerimeterPostData.self, at: "departments", "perimeter", use: createPostPerimeterHandler) // 19
+        protectedRoutes.post(CsrfToken.self, at: UUID.parameter, "info", use: softDeleteAdHandler) // 20
         
     }
     
@@ -83,6 +87,8 @@ struct AdminWebsiteController : RouteCollection {
 //
 //    }
 //
+    // MARK: - GET DATA HANDLERS
+    
     /// DepartmentsHandler for getting all the departments
     /// 1. Function return Future<View>
     /// 2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
@@ -117,8 +123,36 @@ struct AdminWebsiteController : RouteCollection {
 
     
     
+    /// Route handler renders a view with the ad data of the selected ad.
+    /// 1a) Add a csrfToken.
+    /// 1. Extract the UUID from the request's parameter.
+    /// 2. Make a client.
+    /// 3. Make a get request.
+    /// 4. In the completion handler decode the content of the response to AdInfoData and map the result to Future<View>.
+    /// 5. Make a get reques to get contact data of the ad.
+    /// 6. In the completion handler decode the content of the response to Contact and flatMap the result to Future<View>.
+    /// 7. Create a context with the fetched data.
+    /// 8. Return and render the view with context.
+    func getFullAdHandler(_ req: Request) throws -> Future<View> {
+        
+        let token = CSRFToken(req: req).addToken() // 1a
+        let id = try req.parameters.next(UUID.self) // 1
+        let client = try req.make(Client.self) // 2
+        
+        return client.get("http://localhost:9090/api/ads/\(id)/").flatMap(to: View.self) { res in // 3
+            return try res.content.decode(AdInfoData.self).flatMap(to: View.self) { data in // 4
+                
+                return client.get("http://localhost:9090/api/ads/\(id)/contact").flatMap(to: View.self) { resp in // 5
+                    let contact = try resp.content.decode(Contact.self) // 6
+                    let context = FullAdContext(title: "Ad info", adInfo: data, contact: contact, csrfToken: token, cities: nil) // 7
+                    return try req.view().render("adInfo", context) // 8
+                }
+            }
+        }
+    }
     
-    // MARK: - CREATE NEW DATA
+    
+    // MARK: - CREATE NEW CITY HANDLERS
     
     
      /// Create City Handler
@@ -138,7 +172,7 @@ struct AdminWebsiteController : RouteCollection {
         return client.get("http://localhost:9090/api/departments").flatMap(to: View.self) { res in // 3
             
             let departments = try res.content.decode([Department].self) // 4
-            let context = AddCityContext(title: "Add City", departments: departments, csrfToken: token) // 5
+            let context = DepartmentsContext(title: "Add City", departments: departments, csrfToken: token) // 5
             return try req.view().render("addCity", context) // 6
         }
     }
@@ -194,6 +228,8 @@ struct AdminWebsiteController : RouteCollection {
         }
     }
 
+     // MARK: - CREATE NEW CONTACT HANDLERS
+    
     /// Add Contact handler returns a Future<View> to add a contact
     /// 1. Helper function generates a random token and saves it to the session and returns the token.
     /// 2. Create a context and pass the token and title in.
@@ -256,6 +292,9 @@ struct AdminWebsiteController : RouteCollection {
         }
     }
 
+    
+    // MARK: - CREATE NEW AD HANDLERS
+    
     /// Add Ad handler returns a Future<View> to add a ad.
     /// 1. Helper function generates a random token and saves it to the session and returns the token.
     /// 2. Get the cityID from the request's parameter.
@@ -327,9 +366,8 @@ struct AdminWebsiteController : RouteCollection {
         let contactID = try req.parameters.next(UUID.self) // 8
         let client = try req.make(Client.self) // 9
         
-        
         return client.post("http://localhost:9090/api/ads", headers: auth.headers, beforeSend: { req in // 10
-            let data = Ad(note: data.note, generosity: data.generosity, images: nil, show: true, contactID: contactID, cityID: cityID) // 11
+            let data = Ad(note: data.note, generosity: data.generosity, images: nil, contactID: contactID, cityID: cityID) // 11
             try req.content.encode(data, as: .json) // 12
             print(data.note)
         }).flatMap(to: Response.self) { res in // 13
@@ -340,7 +378,7 @@ struct AdminWebsiteController : RouteCollection {
             }
             
              return try res.content.decode(Ad.self).map(to: Response.self) { ad in // 16
-                
+
                 if data.offers != nil { // 17
                     for offer in data.offers! { // 18
                         _ = try OfferRequest.init(ending: "").createOffer(req, ad: ad, offer: offer) // 19
@@ -358,6 +396,8 @@ struct AdminWebsiteController : RouteCollection {
         }
     }
     
+    
+    // MARK: - CREATE NEW COUNTRY HANDLERS
     
     /// Add Country handler returns a Future<View> to add a country
     /// 1. Helper function generates a random token and saves it to the session and returns the token.
@@ -416,6 +456,9 @@ struct AdminWebsiteController : RouteCollection {
         
         }
     }
+    
+    
+    // MARK: - CREATE NEW DEPARTMENT HANDLERS
     
     /// Add Department handler returns a Future<View> to add a country
     /// 1. Helper function generates a random token and saves it to the session and returns the token.
@@ -482,20 +525,19 @@ struct AdminWebsiteController : RouteCollection {
         }
     }
     
+    // MARK: - IMAGE HANDLERS
+    
     /// Handler gets the view to add images to the ad.
     /// 1. Helper function generates a random token and saves it to the session and returns the token.
     /// 2. Make a context.
     /// 3. Render an addImage -leaf and pass the context in.
     func addImageHandler(_ req: Request) throws -> Future<View> {
-        
-        let adID = try req.parameters.next(UUID.self)
         let token = CSRFToken(req: req).addToken() // 1
-        let context = ImageContext(title: "Add Images", csrfToken: token, adID: adID)
-        return try req.view().render("addImage", context)
+        let adID = try req.parameters.next(UUID.self)
+        let context = ImageContext(title: "Add Images", adID: adID, csrfToken: token) // 2
+        return try req.view().render("addImage", context) // 3
        
     }
-    
-    
     
     /// Handler to Make a post request to the API to post image data to the ad.
     /// 1. Get the expected token from the request's session.
@@ -513,14 +555,14 @@ struct AdminWebsiteController : RouteCollection {
     /// 13. If the responses's status code equals to 401.
     /// 14. Destroy the session.
     /// 15. Throw an Abort and Redirect user to the "login" page.
-    /// 15. If status code is not 401, redirect user to the "departments.leaf" page.
+    /// 16. If status code is not 401, redirect user to the "departments.leaf" page.
     
     func addImagePostHandler(_ req: Request, data: ImagePostData) throws -> Future<Response> {
-        
+    
         let expectedToken = CSRFToken(req: req).getToken() // 1
         _ = CSRFToken(req: req).destroyToken // 2
         guard let csrfToken = data.csrfToken,expectedToken == csrfToken else { throw Abort(.badRequest)} // 3
-        
+   
         let auth = Auth(req: req) // 4
         guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "/login")} // 5
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 6
@@ -542,35 +584,10 @@ struct AdminWebsiteController : RouteCollection {
         }
     }
     
-    /// Route handler renders a view with the ad data of the selected ad.
-    /// 1. Extract the UUID from the request's parameter.
-    /// 2. Make a client.
-    /// 3. Make a get request.
-    /// 4. In the completion handler decode the content of the response to AdInfoData and map the result to Future<View>.
-    /// 5. Make a get reques to get contact data of the ad.
-    /// 6. In the completion handler decode the content of the response to Contact and flatMap the result to Future<View>.
-    /// 7. Create a context with the fetched data.
-    /// 8. Return and render the view with context.
-    func getFullAdHandler(_ req: Request) throws -> Future<View> {
-        
-        let id = try req.parameters.next(UUID.self) // 1
-        let client = try req.make(Client.self) // 2
-        
-        return client.get("http://localhost:9090/api/ads/\(id)/").flatMap(to: View.self) { res in // 3
-            return try res.content.decode(AdInfoData.self).flatMap(to: View.self) { data in // 4
-                
-                return client.get("http://localhost:9090/api/ads/\(id)/contact").flatMap(to: View.self) { resp in // 5
-                    let contact = try resp.content.decode(Contact.self) // 6
-                    let context = FullAdContext(title: "Ad info", adInfo: data, contact: contact, csrfToken: nil) // 7
-                    return try req.view().render("adInfo", context) // 8
-                }
-            }
-        }
-    }
+   
 
     // MARK: - EDIT HANDLERS
     
-    // MARK: - EDIT AD
     /// Route handler renders a view with the ad data of the selected ad to edit ad.
     /// 1. Extract the UUID from the request's parameter.
     /// 2. Make a client.
@@ -579,8 +596,10 @@ struct AdminWebsiteController : RouteCollection {
     /// 5. In the completion handler decode the content of the response to AdInfoData and map the result to Future<View>.
     /// 6. Make a get reques to get contact data of the ad.
     /// 7. In the completion handler decode the content of the response to Contact and flatMap the result to Future<View>.
-    /// 8. Create a context with the fetched data.
-    /// 9. Return and render the view with context.
+    /// 8. Make a get request to fetch all the cities.
+    /// 9. Decode the content of the request. 
+    /// 10. Create a context with the fetched data.
+    /// 11. Return and render the view with context.
     
     func editAdHandler(_ req: Request) throws -> Future<View> {
        
@@ -592,18 +611,179 @@ struct AdminWebsiteController : RouteCollection {
             return try res.content.decode(AdInfoData.self).flatMap(to: View.self) { data in // 5
                 
                 return client.get("http://localhost:9090/api/ads/\(id)/contact").flatMap(to: View.self) { resp in // 6
+                    
                     let contact = try resp.content.decode(Contact.self) // 7
-                    let context = FullAdContext(title: "Edit Ad", adInfo: data, contact: contact, csrfToken: token) // 8
-                    return try req.view().render("editAd", context) // 9
+                    
+                    return client.get("http://localhost:9090/api/cities").flatMap(to: View.self) { respo in // 8
+                        
+                        let cities = try respo.content.decode([City].self) // 9
+                        
+                        let context = FullAdContext(title: "Edit Ad", adInfo: data, contact: contact, csrfToken: token, cities: cities) // 10
+                        return try req.view().render("editAd", context) // 11
+                        
+                    }
                 }
             }
         }
     }
     
+    /// Route handler posts new data to the API
+    /// 1. Get the expected token from the request's session.
+    /// 2. Set the token to nil in the session.
+    /// 3. Look if the csrfToken and the existingToken matches. If not throw a bad request.
+    /// 4. Auht helper.
+    /// 5. Get the Auth token; if error occurs redirect to the login page.
+    /// 6. Add token to the headers (bearer).
+    /// 7. Make a client.
+    /// 8. Make a put request with the headers to the API. Before sending the request execute the closure.
+    /// 9. Encode data.
+    /// 10. Map the response to Future<Response>.
+    /// 11. Make a put rquest with the headers to the API. Before sending the request execute the closure.
+    /// 12. Create a contact to send the data.
+    /// 13. Encode the contact data.
+    /// 14. Map the future to <Future>Response.
+    /// 15. If the responses's status code equals to 401.
+    /// 16. Log out the user.
+    /// 17. Throw an Abort and Redirect user to the "login" page.
+    /// 18. If status code is not 401, redirect user to the "index.leaf" page.
+    func editAdPostHandler(_ req: Request, data: AdInfoPostData) throws -> Future<Response> {
+        
+        let expectedToken = CSRFToken(req: req).getToken() // 1
+        _ = CSRFToken(req: req).destroyToken // 2
+        guard let csrfToken = data.csrfToken,expectedToken == csrfToken else {throw Abort(.badRequest)} // 3
+        
+        let auth = Auth(req: req) // 4
+        guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "/login")} // 5
+        auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 6
+        let client = try req.make(Client.self) // 7
+        
+        return client.put("http://localhost:9090/api/ads/\(data.adID)/update", headers: auth.headers, beforeSend: { req in // 8
+            
+            try req.content.encode(data, as: .json) // 9
+            
+        }).flatMap(to: Response.self) { res in // 10
+            
+            return client.put("http://localhost:9090/api/contacts/\(data.contactID)/update", headers: auth.headers, beforeSend: { req in // 11
+                
+                let contact = Contact(adLink: data.adLink, facebookLink: data.facebookLink, contactName: data.contactName) // 12
+                try req.content.encode(contact, as: .json) // 13
+            
+            }).map(to: Response.self) { res in // 14
+                if res.http.status.code == 401 { // 15
+                    auth.logout() // 16
+                    throw Abort.redirect(to: "/login") // 17
+                }
+                return req.redirect(to: "/index") // 18
+            }
+        }
+    }
+    
+    // MARK: - CREATE A PERIMETER HANDLERS
+    
+    /// A route handler to get a view to create a perimeter. Handler returns a future<View>.
+    /// 1. Helper function generates a random token and saves it to the session and returns the token.
+    /// 2. Crete a client and make a get request to get an array of the departments.
+    /// 3. Encode the response data.
+    /// 4. Create a context.
+    /// 5. Render the view.
+   
+    func createPerimeterHandler(_ req: Request) throws -> Future<View> {
+        
+        let client = try req.make(Client.self) // 1
+        // 2
+        let token = CSRFToken(req: req).addToken()
+        return client.get("http://localhost:9090/api/departments").flatMap(to: View.self) { res in
+            
+            let departments = try res.content.decode([Department].self) // 3
+            
+            let context = DepartmentsContext(title: "Create Perimeter", departments: departments, csrfToken: token) // 4
+            return try req.view().render("perimeter", context) // 5
+        }
+    }
+    
+    /// A route handler to make a post request to create a perimeter (a sibling relationship between the selected models. Return HTTPResponse.
+    /// 1. Get the expected token from the request's session.
+    /// 2. Set the token to nil in the session.
+    /// 3. Look if the csrfToken and the existingToken matches. If not throw a bad request.
+    /// 4. Auht helper.
+    /// 5. Get the Auth token; if error occurs redirect to the login page.
+    /// 6. Add token to the headers (bearer).
+    /// 7. Make a client.
+    /// 8. Ensure that the id of the selected department is not a nil.
+    /// 9. Make a post request with the headers and execute the closure before sending the request.
+    /// 10. In the closure create and decode the data.
+    /// 11. Map the future to <Future>Response.
+    /// 12. If the responses's status code equals to 401.
+    /// 13. Log out the user.
+    /// 14. Throw an Abort and Redirect user to the "login" page.
+    /// 15. If status code is not 401, redirect user to the "index.leaf" page.
+    
+    func createPostPerimeterHandler(_ req: Request, data: CreatePerimeterPostData) throws -> Future<Response> {
+
+        let expectedToken = CSRFToken(req: req).getToken() // 1
+        _ = CSRFToken(req: req).destroyToken // 2
+        guard let csrfToken = data.csrfToken,expectedToken == csrfToken else {throw Abort(.badRequest)} // 3
+        
+        let auth = Auth(req: req) // 4
+        guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "/login")} // 5
+        auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 6
+        let client = try req.make(Client.self) // 7
+        
+        return client.post("http://localhost:9090/api/departments/perimeter/\(data.departmentID)", headers: auth.headers, beforeSend: { req in // 9
+            
+            // 10
+            let data = PerimeterPostData(departmentID: data.departmentID, departmentIDs: data.departmentIDs)
+            try req.content.encode(data, as: .json)
+        }).map(to: Response.self) { res in // 11
+            if res.http.status.code == 401 { // 12
+                auth.logout() // 13
+                throw Abort.redirect(to: "/login") // 14
+            }
+            return req.redirect(to: "/index") // 15
+        }
+    }
+
+    // MARK: - SOFT DELETE AD MODEL
+    /// A route handler to soft delete the selected ad
+    /// 1. Get the expected token from the request's session.
+    /// 2. Set the token to nil in the session.
+    /// 3. Look if the csrfToken and the existingToken matches. If not throw a bad request.
+    /// 4. Auht helper.
+    /// 5. Get the Auth token; if error occurs redirect to the login page.
+    /// 6. Add token to the headers (bearer).
+    /// 7. Make a client.
+    /// 8. Extract the ad id from the request's paremeters.
+    /// 9. Make a delete request with the headers and map the future to <Future>Response.
+    /// 10. If the responses's status code equals to 401.
+    /// 11. Log out the user.
+    /// 12. Throw an Abort and Redirect user to the "login" page.
+    /// 13. If status code is not 401, redirect user to the "index.leaf" page.
+    
+    
+    func softDeleteAdHandler(_ req: Request, data: CsrfToken) throws -> Future<Response> {
+        
+        let expectedToken = CSRFToken(req: req).getToken() // 1
+        _ = CSRFToken(req: req).destroyToken // 2
+        guard let csrfToken = data.csrfToken,expectedToken == csrfToken else {throw Abort(.badRequest)} // 3
+        
+        let auth = Auth(req: req) // 4
+        guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "/login")} // 5
+        auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 6
+        let client = try req.make(Client.self) // 7
+        
+        let adID = try req.parameters.next(UUID.self) // 8
+            
+        return client.delete("http://localhost:9090/api/ads/\(adID)/delete", headers: auth.headers).map(to: Response.self) { res in // 9
+            if res.http.status.code == 401 { // 10
+                auth.logout() // 11
+                throw Abort.redirect(to: "/login") // 12
+            }
+            return req.redirect(to: "/index") // 13
+        }
+        }
+    
+    
     
     
 }
-
-
-
 

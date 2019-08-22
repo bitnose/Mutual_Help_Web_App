@@ -21,8 +21,7 @@
 <p> <label for="offers"> Offers </label> </p>
 <p><div class="container2">
 <button class="add_form_field2">Add Offer&nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
-<div><input type="text" name="offers[]" id="offers"> #if(editing){
-#for(offer in offers){value="#(offer.offer)"}} </div>
+<div><input type="text" name="offers[]" id="offers"></div>
 </div></p>
 
 <p><div class="form-group">
