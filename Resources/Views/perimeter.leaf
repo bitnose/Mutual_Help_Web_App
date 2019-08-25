@@ -23,7 +23,7 @@
         <div class="form-group">
             <label for="departmentIDs">Select departments next to the central department</label>
             
-            <select multiple name="departmentIDs" class="form-control" id="departmentIDs">
+            <select multiple name="departmentIDs[]" class="form-control" id="departmentIDs">
                 
                 #for(depart in departments) {
                 <option value="#(depart.id)">

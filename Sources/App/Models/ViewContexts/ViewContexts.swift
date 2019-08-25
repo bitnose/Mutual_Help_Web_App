@@ -249,14 +249,6 @@ struct CreatePerimeterPostData : Content {
     let csrfToken : String?
 }
 
-/// Data type contains data for the API request to create a perimeter.
-/// - department : Selected department (a center of the perimeter)
-/// - departments : Array of the selected departments (departments around of the selected department)
-struct PerimeterPostData : Content {
-    let departmentID : UUID
-    let departmentIDs : [UUID]
-}
-
 
 /// Add Department Context
 /// - array of Future Countries
@@ -334,6 +326,8 @@ struct AdPostData : Content {
     let offers : [String]?
 }
 
+
+// MARK: - Image Contexst and Datas
 /// ImageContect : Contains data for addImage -view.
 /// - title : String
 /// - csrfToken : Optional token
@@ -366,6 +360,18 @@ struct ImageData : Content {
 /// - adID <UUID> : id of the selected ad.
 struct ImageLinksContext : Encodable {
     let title : String
-    let imagesLinks : [String]
+    let imagesData : [ImageLink]?
     let adID : UUID
+    let csrfToken : String?
+
 }
+
+/// Image link
+/// - imageLink : A Link to display an image
+/// - imageName : A name of the image
+struct ImageLink : Content {
+    let imageLink : String
+    let imageName : String
+    
+}
+

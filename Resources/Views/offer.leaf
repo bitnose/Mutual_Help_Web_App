@@ -78,7 +78,7 @@
                     </div>
                     <div id="offerViewIcons">
 
-                        #if(images) {
+                        #if(count(images)>0) {
                         <a href="images/#(adID)">
                             <div id="photoIcon"><img src="/Images/Photo.png" /></div>
                         </a>

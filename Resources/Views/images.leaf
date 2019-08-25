@@ -17,8 +17,8 @@
         <div id="scrollContent">
             <div id="centerFrame">
                 <div id="introheader">
-                    #for(link in imagesLinks) {
-                    <img src="#(link)"/>
+                    #for(imageData in imagesData) {
+                    <img src="#(imageData.imageLink)"/>
                     }
                 </div><div id="content">
                 </div>

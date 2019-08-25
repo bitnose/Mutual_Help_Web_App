@@ -77,12 +77,11 @@
                 id="note" value="#(adInfo.note)"/>
             </div></p>
             
-            <h5>Add Images</h5>
-            #if(adInfo.images) {
-            <a href="/#(adInfo.adID)/showimages">
+            <h5>Edit Images</h5>
+            <a href="/#(adInfo.adID)/image/edit>
                 <div>📷<h5>Images!</h5></div>
             </a>
-            }
+
             
             
             <p><div class="form-group">

@@ -42,7 +42,7 @@ struct AdminWebsiteController : RouteCollection {
         //    18. Get Request - GET VIEW TO CREATE PERIMETER
         //    19. Post Request - POST THE PERIMETER DATA
         //    20. Post Request - POST TO DELETE SELECTED AD
-        //    18. Get Request - GET THE SELECTED DEPARTMENT
+        //    21. Get Request - GET VIEW TO EDIT IMAGES (ADD, DELETE, SHOW)
 
 
      
@@ -66,9 +66,10 @@ struct AdminWebsiteController : RouteCollection {
         protectedRoutes.get("departments", "perimeter", use: createPerimeterHandler) // 18
         protectedRoutes.post(CreatePerimeterPostData.self, at: "departments", "perimeter", use: createPostPerimeterHandler) // 19
         protectedRoutes.post(CsrfToken.self, at: UUID.parameter, "info", use: softDeleteAdHandler) // 20
-        
+        protectedRoutes.get(UUID.parameter, "edit", "image", use: getImageEditHandler) // 21
+        protectedRoutes.post(DeleteImageData.self, at: UUID.parameter, "edit", "image", use: deleteImageHandler)
+ 
     }
-    
     /// CountryHandler for getting all the countries
     /// 1. Make a client.
     /// 2. Make a get request and map a response to Future<View>.
@@ -729,11 +730,14 @@ struct AdminWebsiteController : RouteCollection {
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 6
         let client = try req.make(Client.self) // 7
         
+        
+        print("departmentIDs are:", data.departmentIDs, "selected department is:", data.departmentID)
+        
         return client.post("http://localhost:9090/api/departments/perimeter/\(data.departmentID)", headers: auth.headers, beforeSend: { req in // 9
             
             // 10
-            let data = PerimeterPostData(departmentID: data.departmentID, departmentIDs: data.departmentIDs)
-            try req.content.encode(data, as: .json)
+        //    let data = PerimeterPostData(departmentID: data.departmentID, departmentIDs: data.departmentIDs)
+            try req.content.encode(data.departmentIDs, as: .json)
         }).map(to: Response.self) { res in // 11
             if res.http.status.code == 401 { // 12
                 auth.logout() // 13
@@ -782,8 +786,85 @@ struct AdminWebsiteController : RouteCollection {
         }
         }
     
+    // MARK: - EDIT IMAGES
     
+    /// Route Handler to return a view to delete/ad images
+    /// 1. Helper function generates a random token and saves it to the session and returns the token.
+    /// 2. Extract the ad id from the request's parameter.
+    /// 3. Crete a client and make a get request to get an array of the departments.
+    /// 4. Make a get request to the API and flatMap the response to future<View>
+    /// 5. If the status code is 500:
+    /// 6. Create a context where imagesData is nil.
+    /// 7. Return and render the view.
+    /// 8. If the status code is not 500.
+    /// 9. Decode a content of the response to [ImageLink] and flatMap the future to Future<View>.
+    /// 10. Create a context with the decoded data.
+    /// 11. Return and render the view.
+    func getImageEditHandler(_ req: Request) throws -> Future<View> {
+        
+        let token = CSRFToken(req: req).addToken() // 1
+        let adID = try req.parameters.next(UUID.self) // 2
+        let client = try req.make(Client.self) // 3
+        
+        return client.get("http://localhost:9090/aws/\(adID)/images").flatMap(to: View.self) { res in // 4
+            
+            if res.http.status.code == 500 { // 5
+                let context = ImageLinksContext(title: "Images", imagesData: nil, adID: adID, csrfToken: token) // 6
+                return try req.view().render("editImages", context) // 7
+            } else { // 8
+                return try res.content.decode([ImageLink].self).flatMap(to: View.self) { data in // 9
+                    let context = ImageLinksContext(title: "Images", imagesData: data, adID: adID, csrfToken: token) // 10
+                    return try req.view().render("editImages", context) // 11
+                }
+            }
+        }
+    }
     
+    /// Handler to make a post request to delete an image
+    /// 1. Get the expected token from the request's session.
+    /// 2. Set the token to nil in the session.
+    /// 3. Look if the csrfToken and the existingToken matches. If not throw a bad request.
+    /// 4. Auht helper.
+    /// 5. Get the Auth token; if error occurs redirect to the login page.
+    /// 6. Add token to the headers (bearer).
+    /// 7. Make a client.
+    /// 8. Extract the ad id from the request's paremeters.
+    /// 9. Extract a name of the image from the request's parameters.
+    /// 10. Make a delete request with the headers and map the future to <Future>Response.
+    /// 11. If the responses's status code equals to 401.
+    /// 12. Log out the user.
+    /// 13. Throw an Abort and Redirect user to the "login" page.
+    /// 14. If status code is not 401, redirect user to the "editImages" page.
+    
+    func deleteImageHandler(_ req: Request, data: DeleteImageData) throws -> Future<Response> {
+        
+        let expectedToken = CSRFToken(req: req).getToken() // 1
+        _ = CSRFToken(req: req).destroyToken // 2
+        guard let csrfToken = data.csrfToken,expectedToken == csrfToken else {throw Abort(.badRequest)} // 3
+        
+        let auth = Auth(req: req) // 4
+        guard let token = auth.token else { auth.logout(); throw Abort.redirect(to: "/login")} // 5
+        auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 6
+        let client = try req.make(Client.self) // 7
+        
+        let adID = try req.parameters.next(UUID.self) // 8
+        let imageName = data.imageName // 9
+        
+        return client.get("http://localhost:9090/aws/\(adID)/images/delete/\(imageName)", headers: auth.headers).map(to: Response.self) { res in // 10
+            
+            if res.http.status.code == 401 { // 11
+                auth.logout() // 12
+                throw Abort.redirect(to: "/login") // 13
+            }
+            return req.redirect(to: "/\(adID)/edit/image") // 14
+            
+        }
+    }
     
 }
 
+
+struct DeleteImageData : Content {
+    let csrfToken : String?
+    let imageName : String
+}

@@ -41,11 +41,6 @@
     }
     }</p>
     
-    #if(adInfo..images) {
-    <a href="/images/#(adInfo.adID)">
-        <div>📷<h5>Images!</h5></div>
-    </a>
-    }
     
     <h4>Special note: #(adInfo.note)</h4>
    
@@ -58,7 +53,7 @@
 
             <a class="btn btn-primary" href="/#(adInfo.adID)/edit"
                 role="button">Edit</a>&nbsp;
-            <a class="btn btn-primary" href="/#(adInfo.adID)/edit/images"
+            <a class="btn btn-primary" href="/#(adInfo.adID)/edit/image"
                 role="button">Edit Images</a>&nbsp;
             <input class="btn btn-danger" type="submit" value="Delete"/>
             </form>
