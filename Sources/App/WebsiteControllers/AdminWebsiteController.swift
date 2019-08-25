@@ -809,11 +809,11 @@ struct AdminWebsiteController : RouteCollection {
         return client.get("http://localhost:9090/aws/\(adID)/images").flatMap(to: View.self) { res in // 4
             
             if res.http.status.code == 500 { // 5
-                let context = ImageLinksContext(title: "Images", imagesData: nil, adID: adID, csrfToken: token) // 6
+                let context = EditImagesContext(title: "Images", imagesData: nil, adID: adID, csrfToken: token) // 6
                 return try req.view().render("editImages", context) // 7
             } else { // 8
                 return try res.content.decode([ImageLink].self).flatMap(to: View.self) { data in // 9
-                    let context = ImageLinksContext(title: "Images", imagesData: data, adID: adID, csrfToken: token) // 10
+                    let context = EditImagesContext(title: "Images", imagesData: data, adID: adID, csrfToken: token) // 10
                     return try req.view().render("editImages", context) // 11
                 }
             }

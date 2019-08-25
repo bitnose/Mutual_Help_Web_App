@@ -240,30 +240,25 @@ struct WebsiteController : RouteCollection {
         }
     
     
-    /* Function to return the image view:
-     1. Get a imageURL by calling the function to prepare url. Because the function might throw do it in a do - catch block to catch errors if those occur.
-     2. Create a context and pass by the title and the imageURL
-     3. Return and render the showImage -leaf with the context
-     4. Catch errors if there are any and print them out.
-     */
-    
-    func getImagesHandler(_ req: Request) throws -> Future<View> {
+    /// Route handler to return the image view:
+    /// 1. Handler takes a request and returns a Future<View>.
+    /// 2. Extract the id of the request's parameter.
+    /// 3. Make a client.
+    /// 4. Send a get request to the url and flatMap a response to the future<View>.
+    /// 5. In the completion handler decode a content of the response to an array of ImageData.
+    /// 6. Create a context and pass in the context, adID and the array of ImageData. Token is nil.
+    /// 7. Return and render the showImage -leaf with the context
+    func getImagesHandler(_ req: Request) throws -> Future<View> { // 1
         
-        let adID = try req.parameters.next(UUID.self)
+        let adID = try req.parameters.next(UUID.self) // 2
         
-        let client = try req.make(Client.self) // 2.
-        
-        
-        return client.get("http://localhost:9090/aws/\(adID)/images").flatMap(to: View.self) { res in // 4.
-            return try res.content.decode([String].self).flatMap(to: View.self) { data in // 5.
-                
-        
-                let context = ImageLinksContext(title: "Images", imagesLinks: data, adID: adID)
-                return try req.view().render("images", context) // 8.
-                
-            }
+        let client = try req.make(Client.self) // 3
+        return client.get("http://localhost:9090/aws/\(adID)/images").flatMap(to: View.self) { res in // 4
+            let data = try res.content.decode([ImageLink]?.self) // 5
+            
+            let context = ImageLinksContext(title: "Images", imagesData: data, adID: adID) // 6
+            return try req.view().render("images", context) // 7
         }
-
     }
     
   

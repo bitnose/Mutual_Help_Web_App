@@ -354,15 +354,26 @@ struct ImageData : Content {
 }
 
 
+// Data type contains data for image.leaf -view.
+/// - title <String> : Title of the page
+/// - imagesLinks Array<String> : Array of the Strings
+/// - adID <UUID> : id of the selected ad.
+struct EditImagesContext : Encodable {
+    let title : String
+    let imagesData : [ImageLink]?
+    let adID : UUID
+    let csrfToken : String?
+}
+
+
 /// Data type contains data for image.leaf -view.
 /// - title <String> : Title of the page
 /// - imagesLinks Array<String> : Array of the Strings
 /// - adID <UUID> : id of the selected ad.
 struct ImageLinksContext : Encodable {
     let title : String
-    let imagesData : [ImageLink]?
+    let imagesData : Future<[ImageLink]?>
     let adID : UUID
-    let csrfToken : String?
 
 }
 
