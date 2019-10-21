@@ -8,15 +8,19 @@
 import Foundation
 import Vapor
 
-// Model for Department
-
+/** # Model for Department
+ - id : UUID?
+ - departmentNumber : Int
+ - departmentName : String
+ - coutnryID : UUID
+ */
 final class Department : Codable {
     
     var id : UUID?
     var departmentNumber : Int
     var departmentName : String
     var countryID : UUID
-
+    /// # Init
     init(departmentNumber : Int, departmentName : String, countryID : UUID) {
         self.departmentNumber = departmentNumber
         self.departmentName = departmentName
@@ -25,5 +29,5 @@ final class Department : Codable {
     }
 }
 
-
+// Conform Content
 extension Department : Content {}

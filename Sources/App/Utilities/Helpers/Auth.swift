@@ -8,7 +8,7 @@ import Foundation
 import Vapor
 
 ///
-/// Helper Class to Help with Authentication
+// MARK: - Helper Class to Help with Authentication
 ///
 ///     - DefaultsKey is the Name of the Session
 ///     - Request
@@ -19,10 +19,24 @@ import Vapor
 ///        Setter
 ///         - Add a new token to the session
 ///         - Catch errors if there are: If yes, stop execution and print a message
+///     - userID : String?
+///         Getter
+///         - Try to get the token from the session
+///         - Catch the errors if there are: If yes, return nil
+///        Setter
+///         - Add a new token to the session
 ///     - Headers : HTTPHeaders = ("application/json")
+///     - usertype : String?
+///         Getter
+///         - Try to get the token from the session
+///         - Catch the errors if there are: If yes, return nil
+///        Setter
+///         - Add a new token to the session
 final class Auth {
     
+    let userIDKey = "USER-ID-KEY"
     let defaultsKey = "MH-API-KEY"
+    let accessKey = "ACCESS-KEY"
     let req: Request
     var token: String? {
         
@@ -41,8 +55,45 @@ final class Auth {
             }
         }
     }
-    var headers: HTTPHeaders = [HTTPHeaderName.contentType.description : "application/json"] // 2
+    /// User ID
+    var userID: String? {
+        
+        get {
+            do {
+                return try req.session()[userIDKey]
+            } catch {
+                return nil
+            }
+        }
+        set {
+            do {
+                try req.session()[userIDKey] = newValue
+            } catch {
+                fatalError("Cache: Saving not successful")
+            }
+        }
+    }
     
+    var usertype: String? {
+           
+           get {
+               do {
+                   return try req.session()[accessKey]
+               } catch {
+                   return nil
+               }
+           }
+           set {
+               do {
+                   try req.session()[accessKey] = newValue
+               } catch {
+                   fatalError("Cache: Saving not successful")
+               }
+           }
+       }
+
+    var headers: HTTPHeaders = [HTTPHeaderName.contentType.description : "application/json"] // 2
+
 ///
 ///     - Initialization of the Request
 ///
@@ -89,4 +140,17 @@ final class Auth {
         }
     }
     
+    /**
+     # Mehtod to check if the authenticated user has an admin access.
+     - Returns: Bool 
+     */
+    func isAdmin() -> Bool {
+        
+        if usertype == "admin" {
+            
+            return true
+        } else {
+            return false
+        }
+    }
 }

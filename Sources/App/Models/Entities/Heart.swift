@@ -6,17 +6,23 @@
 //
 
 import Foundation
-// Heart Model
-
+/**
+ # Heart Model
+ - id : UUID?
+ - heartCreatedAt : Date?
+ - adID : UUID
+ - userID : UUID
+*/
 final class Heart : Codable {
     
     var id : UUID?
     var heartCreatedAt : Date?
-    var token : String
     var adID : UUID
-    
-    init(token: String, adID: UUID) {
-        self.token = token
+    var userID : UUID
+    /// # Init
+    init(adID: UUID, userID : UUID) {
+
         self.adID = adID
+        self.userID = userID
     }
 }

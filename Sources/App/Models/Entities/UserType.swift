@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Vapor
 
-/// A new enum string type to the user to define basic user access levels
+
+/// # A new enum string type to the user to define basic user access levels
 /// - admin : Full Access (Registered Users with Admin Panel)
 /// - standard : Basic Access (Registered Users)
 /// - restricted : Limited Access (Unregistered Users)
@@ -17,3 +19,5 @@ enum UserType: String, Codable {
     case standard
     case restricted
 }
+
+extension UserType : Content {}

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Vapor
 
 /// Here is an extension to base 64 encode and decode strings.
 ///
@@ -26,3 +27,5 @@ extension String {
         return Data(self.utf8).base64EncodedString()
     }
 }
+
+

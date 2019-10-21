@@ -1,0 +1,8 @@
+#set("content") {
+<div id="centerFrame">
+    <h3>Something went wrong. Please try again later! :) </h3>
+</div>
+}
+#embed("base")
+
+

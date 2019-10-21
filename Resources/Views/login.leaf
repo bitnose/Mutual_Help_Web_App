@@ -1,42 +1,53 @@
-<!DOCTYPE html>
-<!-- Declare a basic HTML 5 page with head and body. -->
-<html lang="en">
 
-     <head>
-          <meta charset="UTF-8">
-         <h1>#(title)</h1>
-    </head>
+#set("content") {
 
+<div id="centerFrame">
+    <div id="introheader">
+        <img src="/Images/logo.svg" />
+    </div>
+ 
+    </br>
 
+    #if(loginError) {
+    <div class="alert alert-danger" role="alert">
+        User authentication error. Either your username or
+        password was invalid.
+    </div>
+    }
+    </br>
+    
+    <form method="post">
 
-     <body>
-#if(loginError) {
-<div class="alert alert-danger" role="alert">
-    User authentication error. Either your username or
-    password was invalid.
+    #if(csrfToken) {
+    <input type="hidden" name="csrfToken" value="#(csrfToken)">
+    }
+
+        <div class="form-group">
+            <label for="username">Email</label>
+            </br>
+            <input type="text" name="username" class="form-control"
+            id="username" maxlength="30"/>
+        </div>
+        </br>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            </br>
+            <input type="password" name="password"
+            class="form-control" id="password" maxlength="30"/>
+        </div>
+        
+        </br>
+        
+        <button class="subnmitButton" type="submit">Log in!</button>
+    </form>
+    </br>
+    
+    <a href="">Forgat your password</a>
+        </br>
+        <a href="/register">Register</a>
 </div>
 }
 
-
-<form method="post">
-
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" name="username" class="form-control"
-        id="username"/>
-    </div>
-    
-
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" name="password"
-        class="form-control" id="password"/>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-        Log In
-    </button>
-</form>
-</body>
-</html>
+#embed("base")
 

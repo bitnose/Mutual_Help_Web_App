@@ -1,33 +1,50 @@
 #set("content") {
-
+<div id="centerFrame">
 <h1>#(title)</h1>
 
+<br>
 
-<form method="post", action="/#(adID)/image", enctype="multipart/form-data">
-
-#if(csrfToken) {
-<input type="hidden" name="csrfToken" value="#(csrfToken)">
-}
-
-
-
-<div class="form-group">
-<label>
-Select Image for Ad
-</label>
-<input type="file" name="image"
-class="form-control-file" id="image"/>
+#if(message) {
+<div calss="alert alert-danger" role="alert">
+Please fix the following errors: <br />
+#(message)
 </div>
 
-<button type= "submit" class="btn btn-primary">
-Upload
-</button>
-
-<a class="btn" href="/#(adID)">Go to Ad</a>
-
+}
+<br>
+<form method="post", action="/#(adID)/image", enctype="multipart/form-data">
+    
+    #if(csrfToken) {
+    <input type="hidden" name="csrfToken" value="#(csrfToken)">
+        }
+        
+        
+        
+        <div class="form-group">
+            <label>
+                Select Image for Ad
+            </label>
+            </br>
+            <input type="file" name="image"
+            class="form-control-file" id="image"/>
+        </div>
+        
+         <button class="subnmitButton" type="submit">Upload</button>
+    
 </form>
+
+<label>
+or
+</label>
+      </br>
+    <a href="/self/index"><button class="subnmitButton" type="submit"> Next </button></a>
+
+
+
+</div>
 }
 
 
 #embed("base")
+
 

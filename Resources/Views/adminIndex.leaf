@@ -1,0 +1,118 @@
+
+#set("content") {
+
+        
+        <div id="scrollContent">
+            <div id="adHeader">
+                <img src="/Images/logo.svg" />
+            </div>
+            
+            
+            #for(ad in adInfo) {
+            
+            <div id="offerBlock">
+              
+                <div class="offerItem">
+                    <div class="offerTitle">
+                        
+                        <div id="likeIcon" class="iconDefault">
+                            <img src="/Images/MyHeart.png"/>
+                            <h6>#(ad.hearts)</h6>
+                        </div>
+                        
+                         <div id="contactIcon" class="iconDefault">
+                        <form method="post" action="/self/index/">
+                        #if(csrfToken) {
+                             <input type="hidden" name="csrfToken" value="#(csrfToken)">
+                                 <input type="hidden" name="adID" value="#(ad.ad.id)">
+                             }
+                                     
+                                     
+                         <input class="submitButton" type="submit" value="Delete Ad"/>
+                         </form>
+     
+                          </div>
+                        
+                        <div class="offerTitleText">
+                            <h2>#(ad.department.departmentName) (#(ad.department.departmentNumber))</h2>
+                            <h3>#(ad.city.city)</h3>
+                            <h6>"#(ad.ad.note)"</h6>
+                           <h6>#(ad.ad.createdAt)</h6>
+                        </div>
+             
+                    </div>
+                    
+                    <div class="offerText">
+                        <div class="theOffer">
+                            <h4>Offre</h4>
+                            <div class="theOfferContent">
+                                <ul>
+                                    #if(count(ad.offers) > 0) {
+                                    #for(offer in ad.offers) {
+                                    <li>#(offer.offer)</li>
+                                    }} else {<li> No offers!</li>}
+                                </ul>
+                            </div>
+                            </div>
+                         <div class="theOffer">
+                            <h4>Demande</h4>
+                           <div class="theDemandContent">
+                               <ul>
+                                   #if(count(ad.demands) > 0) {
+                                   #for(demand in ad.demands) {
+                                   <li>#(demand.demand)</li>
+                                   }} else { <li> No demands!</li>}
+                               </ul>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="theOffer">
+                                    <br/>
+                                    <div id="contactIcon"><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /></div>
+                                    <br/>
+                                     <h4>User</h4>
+                                     <li>#(ad.user.firstname) #(ad.user.lastname)</li>
+                                     <li>#(ad.user.email)</li>
+                                     <li>#(ad.user.id)</li>
+                                    
+                                    <form method="post" action="/admin/delete/#(ad.user.id)">
+                                        #if(csrfToken) {
+                                        <input type="hidden" name="csrfToken" value="#(csrfToken)">
+                                                }
+                                                
+                                                
+                                    <input class="submitButton" type="submit" value="Delete User"/>
+                                    </form>
+                                </div>
+                    <div id="offerViewIcons">
+                                 #if(count(ad.ad.images)>0) {
+                                         <a href="/ads/images/#(ad.ad.id)">
+                                             <div id="photoIcon"><img src="/Images/Photo.png" /></div>
+                                         </a>
+                                         }
+                                       <a href="/self/edit/#(ad.ad.id)">
+                                      <div id="moreInfoIcon"><img src="/Images/MoreInfo.png"/></div></a>
+                                                             
+                                             </div>
+                    
+                </div>
+                 </div>
+                }
+            <br>
+                <h3>Users<h3>
+                    <h6>We have #count(users) registered users. Hurray! </h6>
+            <br>
+            #if(count(users)>0) {
+                #for(user in users) {
+            
+            <li>#(user.firstname) #(user.lastname), #(user.email)</li>
+            
+            }
+            
+            } else {
+            <h3>We don't have any registered users yet.</h3>
+            }
+                
+}
+
+#embed("base")

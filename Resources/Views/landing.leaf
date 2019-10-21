@@ -1,27 +1,4 @@
-<!doctype html>
-<html lang="fr">
-    
-    <head>
-        <meta charset="UTF-8">
-            
-            
-            <title> #(title) </title>
-            
-            <base href="" />
-            <link rel="stylesheet" href="/styles/pays.css" type="text/css" />
-            <link rel="stylesheet" href="/styles/pays_form.css" type="text/css" />
-            
-            <!-- <script type="text/javascript" src="script/jquery-3.3.1.min.js"></script> -->
-            <!-- <script type="text/javascript" src="script/pays.js"></script> -->
-        
-            
-            <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0" />
-            
-    </head>
-    
-    <body>
-        
-        
+#set("content") {
         <div id="scrollContent">
             
             
@@ -33,6 +10,7 @@
                 <div id="landingImage">
                     <img src="/Images/france.png" />
                 </div>
+                
                 
                 
                 
@@ -59,12 +37,10 @@
                                     #for(department in data.departments) {
                                     <option value="#(department.id)">#(department.departmentName)</option>
                                     }
-                                
-                                
                                 }
                             </select>
                         </div>
-                        <br />
+                        <br/>
                         <!--
                          <div class="formItem">
                          <p>Authorisation:</p>
@@ -73,6 +49,7 @@
                          -->
                         <input type="submit" name="submit" value="Allez!" />
                         <!--               <input type="reset" value="Clear"> -->
+                        
                     </form>
                 </div>
                 
@@ -85,25 +62,11 @@
             </div></div></div>
             
         </div>
-        
-        
-        <div id="footer"></div>
-        
-        
-        
-        <!-- Script -->
-
-        
-        <script src="/script/footer.js"></script>
-        
-        
-    </body>
-</html>
 
 
 
 
 
-
-
+}
+#embed("base")
 

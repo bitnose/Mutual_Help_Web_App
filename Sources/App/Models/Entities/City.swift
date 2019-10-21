@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// City Model which Comforms Codable
+/// # City Model which Comforms Codable
 /// - id : <UUID?>
 /// - city : <String>
 /// - departmentID : <UUID>
@@ -17,7 +17,7 @@ final class City : Codable {
     var city : String
     var departmentID : UUID
     
-    /// Initialization
+    /// # Initialization
     init(city : String, departmentID : UUID) {
         self.city = city
         self.departmentID = departmentID

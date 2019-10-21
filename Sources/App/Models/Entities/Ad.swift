@@ -7,30 +7,31 @@
 
 import Foundation
 
-/// Ad Class which comforms Codable
+/// # Ad Class which comforms Codable
 /// - id : <UUID?>
 /// - note : <String>
 /// - generosity : <Int>
 /// - images : <[Strings]>?
 /// - contactID : UUID
 /// - cityID : UUID
+/// - userID : UUID (The user who created the ad)
 
 final class Ad : Codable {
     
     var id : UUID?
     var note : String
-    var generosity : Int
+ //   var generosity : Int
     var images : [String]?
-    var contactID : UUID
     var cityID : UUID
+    var userID : UUID
     
-    /// Initialize
-    init(note: String, generosity: Int, images: [String]? = nil, contactID: UUID, cityID: UUID) {
+    /// # Initialize
+    init(note: String, images: [String]? = nil, cityID: UUID, userID: UUID) {
         
         self.note = note
-        self.generosity = generosity
+  //      self.generosity = generosity
         self.images = images
-        self.contactID = contactID
         self.cityID = cityID
+        self.userID = userID
     }
 }

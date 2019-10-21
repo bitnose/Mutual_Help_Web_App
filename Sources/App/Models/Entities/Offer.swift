@@ -6,14 +6,18 @@
 //
 
 import Foundation
-// Offer Model
-
+/**
+ # Offer Model
+ - id : UUID?
+ - offer : String
+ - adID : UUID
+*/
 final class Offer : Codable {
     
     var id : UUID?
     var offer : String
     var adID : UUID
-   
+    /// # Init
     init(offer: String, adID: UUID) {
         self.offer = offer
         self.adID = adID

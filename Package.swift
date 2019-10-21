@@ -11,11 +11,13 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
 
         // Leaf is Vapor's templating language
-        .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0")
+        .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0"),
+        // Redis database
+        .package(url: "https://github.com/vapor/redis.git", from: "3.0.0")
        
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "Leaf"]),
+        .target(name: "App", dependencies: ["Vapor", "Leaf", "Redis"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App"])
     ]

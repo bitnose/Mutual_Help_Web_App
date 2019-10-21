@@ -1,30 +1,32 @@
 #set("content") {
-<h1>#(title)</h1>
+<div id="centerFrame">
 
 <form method="post">
     
     #if(csrfToken) {
     <input type="hidden" name="csrfToken" value="#(csrfToken)">
         }
-        
+        <br/>
         
         <div class="form-group">
             <label for="departmentName">Department Name</label>
+            <br/>
             <input type="text" name="departmentName" class="form-control"
             id="departmentNumber"/>
         </div>
-        
+        <br/>
         <div class="form-group">
             <label for="departmentNumber">Department Number</label>
+            <br/>
             <input type="text" name="departmentNumber" class="form-control"
             id="departmentNumber"/>
         </div>
-        
+        <br/>
         <div class="form-group">
             <label for="countryID">Country</label>
-            
+            <br/>
             <select name="countryID" class="form-control" id="countryID">
-                
+            <br/>
                 #for(country in countries) {
                 <option value="#(country.id)">
                     #(country.country)
@@ -33,11 +35,11 @@
             </select>
         </div>
         
-        
-        <button type="submit" class="btn btn-primary">
-            Add Department
-        </button>
+         <br/>
+<br/>
+<button class="subnmitButton" type="submit">Submit</button>
 </form>
+</div>
 }
 
 #embed("base")

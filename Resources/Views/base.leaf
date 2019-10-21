@@ -1,77 +1,100 @@
-<!DOCTYPE html>
-<!-- Declare a basic HTML 5 page with head and body. -->
-<html lang="en">
+<!doctype html>
+<html lang="fr">
     <head>
-        <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-                        <link rel="stylesheet" href="/styles/style.css" type="text/css"/>
-                        <link rel="stylesheet" href="/styles/dynamicInputField.css" type="text/css"/>
-                        
-                        
-                        
-                        <title>#(title)</title>
+        <meta charset="UTF-8">
+            
+            <title> #(title) </title>
+            
+            <base href="" />
+            <link rel="stylesheet" href="/styles/pays.css" type="text/css" />
+            <link rel="stylesheet" href="/styles/pays_form.css" type="text/css" />
+            <link rel="stylesheet" href="/styles/naviBar.css" type="text/css" />
+            <link rel="stylesheet" href="/styles/dynamicInputField.css" type="text/css"/>
+            <link rel="stylesheet" href="/styles/style.css" type="text/css" /
+
+            
+           
+            <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0" />
+            
+            
+            
     </head>
     <body>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-            <a class="navbar-brand" href="/index">Ads</a>
-            <button class="navbar-toggler" type="button"
-                data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse"
-                id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item #if(title == "Countries"){active}">
-                        <a href="/countries" class="nav-link">Landing</a>
-                    </li>
-                    <li class="nav-item #if(title == " Countries and Departments"){active}">
-                        <a href="/countries/all" class="nav-link"> Countries and Departments</a>
-                    </li>
-                    <li class="nav-item #if(title == "Add Country"){active}">
-                        
-                        <a href="/add/country" class="nav-link">Add Country</a>
-                    </li>
-                    
-                    <li class="nav-item #if(title == "Add Department"){active}">
-                        
-                        <a href="/add/department" class="nav-link">Add Department</a>
-                    </li>
-                   
-                    <li class="nav-item #if(title == "Create New Ad"){active}">
-                        
-                        <a href="/add/city" class="nav-link">Create New Ad</a>
-                    </li>
+            <div class="topnav">
                 
-                    
-                    
-                    
-                </ul>
-                    <li class="nav-link btn">
-                        <a href="/logout" class="nav-link">Logout!</a>
-                    </li>
                 
-            </div>
-        </nav>
-        <div class="container mt-3">
-            #get(content)
-        </div>
-        #if(showCookieMessage) {
-        <footer id="cookie-footer">
-            <div id="cookieMessage" class="container">
-                <span class="muted">
-                    This site uses cookies! To accept this, click <a href="#" onclick="cookiesConfirmed()">OK</a>
-                </span>
-            </div>
-        </footer>
-        <script src="/script/cookie.js"></script>
+                    <a #if(title == "Home") {class= "active"} href="/countries">Landing</a>
+                     <a #if(title == "Offres" || title == "Demandes") {class= "active"} href="/countries/ads?department=&offers=true">
+                         Ads </a>
+                 <!-- IF USER LOGGED IN = FALSE -->
+                 #if(userLoggedIn == false) {
+                    <a #if(title == "Login") {class= "active"} href="/login">Login!</a>
+                                              
+                    <a #if(title == "Register") {class= "active"} href="/register"> Register </a>
+                    }
+                #if(userLoggedIn) {
+                <!-- IF USER LOGGED IN = TRUE -->
+                    <a #if(title == "My Profile") {class= "active"} href="/self/index">My Profile</a>
+ 
+                    <a href="/logout">Logout!</a>
+                }
+                <!-- IF USER LOGGED IN + ADMINUSER = TRUE -->
+                #if(userLoggedIn == true && isAdmin == true) {
+                
+                    <a #if(title == "All the Ads") {class= "active"} href="/admin/index">All Ads</a>
+                
+                    <a #if(title == "Countries and Departments") {class= "active"} href="/admin/countries/all"> Countries and Departments</a>
         
-        }
+                    <a #if(title == "Add Country") {class= "active"} href="/admin/add/country">Add Country</a>
+                    
+                    <a #if(title == "Add Department") {class= "active"} href="/admin/add/department">Add Department</a>
+         
+                    <a #if(title == "Create New Ad") {class= "active"} href="/self/new">Create New Ad</a>
+                    
+                    
+                    }
+                   
+            </div>
+            <div id="scrollContent">
+            #get(content)
+            <div id="footerMobileFrame"><div id="footerMobile"><div id="footerLogo">
+                <p>&copy; 2019 gilets-jaunes-entraide.fr</p><img src="/Images/logo.svg" /></a>
+            </div></div></div>
+       
+
+
+       
+       
+        <div id="footer"></div>
+         </div>
+        <!-- Script -->
+       
+       #if(showCookieMessage) {
+
+               <footer id="cookie-footer">
+                 <div id="cookieMessage" class="container">
+                   <span class="muted">
+        
+                     This site uses cookies! To accept this, click
+                     <a href="#" onclick="cookiesConfirmed()">OK.</a><a href="/cookies/"> Read more.</a>
+                   </span>
+                 </div>
+               </footer>
+       
+               <script src="/script/cookie.js"></script>
+             }
+  
+      
+        <script src="/script/footer.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="/script/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/script/pays.js"></script>
         <script src="/script/dynamicInputField.js"></script>
+        
+        
+        
+      
     </body>
 </html>
 

@@ -1,24 +1,28 @@
+
 #set("content") {
+<div id="centerFrame">
+</br>
 <h1>#(title)</h1>
 
 <form method="post">
-
-#if(csrfToken) {
-<input type="hidden" name="csrfToken" value="#(csrfToken)">
-}
-
-
-<div class="form-group">
-<label for="country">Country</label>
-<input type="text" name="country" class="form-control"
-id="country"/>
-</div>
-
-
-<button type="submit" class="btn btn-primary">
-Add Country
-</button>
+    
+    #if(csrfToken) {
+    <input type="hidden" name="csrfToken" value="#(csrfToken)">
+        }
+        
+        
+        <div class="form-group">
+            <br/>
+            <label for="country">Country</label>
+            <br/>
+            <input type="text" name="country" class="form-control"
+            id="country"/>
+        </div>
+        
+        <br/>
+         <button class="subnmitButton" type="submit">Submit</button>
 </form>
+</div>
 }
 
 #embed("base")

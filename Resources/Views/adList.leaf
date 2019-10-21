@@ -1,33 +1,12 @@
-<!doctype html>
-<html lang="fr">
-    
-    <head>
-        <meta charset="UTF-8">
-            
-            
-            <title>Ads</title>
-            
-            <base href="" />
-            <link rel="stylesheet" href="/styles/pays.css" type="text/css" />
-            
-            <script type="text/javascript" src="/script/jquery-3.3.1.min.js"></script>
-            <script type="text/javascript" src="/script/pays.js"></script>
-            
-            <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=0" />
-            
-            
-    </head>
-    
-    <body>
-        
+#set("content") {
         <div id="scrollContent">
             <div id="adHeader">
                 <img src="/Images/logo.svg"/>
                 
                 <div id="adControlBar">
                     
-                    <a href="/countries/ads/offers/#(data.selectedDepartment.id)"><div id="offre" class="controlBar">Offres</div></a>
-                    <a href="/countries/ads/demands/#(data.selectedDepartment.id)"><div id="demand" class="controlBar">Demandes</div></a>
+                    <a href="/countries/ads?department=#(data.selectedDepartment.id)&offers=true"><div id="offre" class="controlBar">Offres</div></a>
+                    <a href="/countries/ads?department=#(data.selectedDepartment.id)&offers=false"><div id="demand" class="controlBar">Demandes</div></a>
                    
                 </div>
                 
@@ -72,21 +51,9 @@
                     }
                 </div>
             </div>
-            
-            <div id="footerMobileFrame"><div id="footerMobile"><div id="footerLogo">
-                <p>&copy; 2019 gilets-jaunes-entraide.fr</p><a href="/countries"><img src="/Images/logo.svg" /></a>
-            </div></div></div>
-            
-        </div>
-        
-        <div id="footer"></div>
-        <script src="/script/footer.js"></script>
-        
-        
-        
-    </body>
-</html>
 
+}
+#embed("base")
 
 
 

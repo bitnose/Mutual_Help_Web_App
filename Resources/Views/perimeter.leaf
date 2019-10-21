@@ -1,43 +1,48 @@
 #set("content") {
-<h1>#(title)</h1>
-
+<div id="centerFrame">
+<title>#uppercase(title)</title>
+</br>
 <form method="post">
     
     #if(csrfToken) {
     <input type="hidden" name="csrfToken" value="#(csrfToken)">
         }
-        
-        
         <div class="form-group">
             <label for="departmentID">Select a Center of the Perimeter</label>
+            </br>
             <select name="departmentID" class="form-control" id="departmentID">
                 
                 #for(depart in departments) {
                 <option name="departmentID" value="#(depart.id)">
-                    #(depart.departmentNumber) #(depart.departmentName)
+                    #(depart.departmentNumber) #capitalize(depart.departmentName)
                 </option>
                 }
             </select>
         </div>
-        
+
         <div class="form-group">
+            </br>
             <label for="departmentIDs">Select departments next to the central department</label>
-            
+            </br>
             <select multiple name="departmentIDs[]" class="form-control" id="departmentIDs">
                 
                 #for(depart in departments) {
                 <option value="#(depart.id)">
-                    #(depart.departmentNumber) #(depart.departmentName)
+                    #(depart.departmentNumber) #capitalize(depart.departmentName)
                 </option>
                 }
             </select>
         </div>
-        
-        
-        <button type="submit" class="btn btn-primary">
-            Add relationships
-        </button>
+        </br>
+        <button class="subnmitButton" type="submit">Submit</button>
+            
 </form>
+
+<a href="/admin/countries/all"><button class="subnmitButton" type="submit"> Cancel </button></a>
+
+   <br/>
+
+</div>
 }
 
 #embed("base")

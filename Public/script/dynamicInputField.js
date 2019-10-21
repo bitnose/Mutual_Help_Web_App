@@ -8,7 +8,7 @@ $(document).ready(function() {
                                       e.preventDefault();
                                       if(x < max_fields){
                                       x++;
-                                      $(wrapper).append('<div><input type="text" name="demands[]"/><a href="#" class="delete">Delete</a></div>'); //add input box
+                                      $(wrapper).append('<div><input type="text" name="demands[]"/><a href="#" class="delete">-</a></div>'); //add input box
                                       }
                                       else
                                       {
@@ -30,7 +30,7 @@ $(document).ready(function() {
                                       e.preventDefault();
                                       if(x < max_fields){
                                       x++;
-                                      $(wrapper).append('<div><input type="text" name="offers[]"/><a href="#" class="delete">Delete</a></div>'); //add input box
+                                      $(wrapper).append('<div><input type="text" name="offers[]"/><a href="#" class="delete">-</a></div>'); //add input box
                                       }
                                       else
                                       {

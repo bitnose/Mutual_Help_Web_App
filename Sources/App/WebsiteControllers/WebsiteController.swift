@@ -8,9 +8,6 @@
 import Foundation
 import Vapor
 import Leaf
-import Crypto
-
-
 
 /*
  Controller which handles API calls and rendering pages. This Controller conforms RouteCollection
@@ -29,249 +26,177 @@ struct WebsiteController : RouteCollection {
          1. Get Request - GET SINGLE AD
          2. Get Request - GET ALL THE COUNTRIES
          3. Get Request - GET ADS OF THE PERIMETER OF THE SELECTED DEPARTMENT
-         4. Get Request - GET THE CONTACT OF THE AD
-         5. Get Rqquest - GET ADS OF THE PERIMETER OF THE SELECTED DEPARTMENT (OFFERS/DEMANDS)
-         9. Post Request - POST/REMOVE HEART TO THE AD
+         4. Get Request - GET IMAGE LINKS OF THE AD
          */
-        websiteRoutes.get("ads", String.parameter, use: getAdHandler) // 1.
-        websiteRoutes.get("countries", use: countryHandler) // 2.
-        websiteRoutes.get("countries", "ads", use: adsOfPerimeterHandlers) // 3.
-        websiteRoutes.get("ads", "contact", String.parameter, use: getContactHandler) // 4.
-        websiteRoutes.get("countries", "ads", String.parameter, UUID.parameter, use: adsOfPerimeterHandler) // 5.
-        websiteRoutes.post("ads", UUID.parameter, use: heartPostHandler)
-        websiteRoutes.get("ads", "images", UUID.parameter, use: getImagesHandler)
-        
+        websiteRoutes.get("ads", UUID.parameter, use: getAdHandler) // 1
+        websiteRoutes.get("countries", use: countryHandler) // 2
+        websiteRoutes.get("countries", "ads", use: adsOfPerimeterHandler) // 3
+        websiteRoutes.get("ads", "images", UUID.parameter, use: getImagesHandler) // 4
+      
      
     }
+
+     // MARK: - landing.leaf
     
-    /*
-     Function to make an API request to get all the countries and render the landing view.
+    /**
+     # Function to make an API request to get all the countries with departments and render the landing view.
+     - Parameters:
+        - req: Request
+     - Throws: Abort Redirect (error.leaf)
+     - Returns: Future : View
+     
      1. Function return Future<View>
-     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
-     3. Sends an HTTP GET Request to a server and returns a view
-     4. Return and Decode JSON response to the array of future countries. This is possible because Country conforms Encodable. FlatMap future to View.self.
-     5. Create an empty array of CountryData objects.
-     6. Loop countries.
-     7. Get departments of the country by calling getDepartments -method.
-     8. Create data object and pass the fetched data in.
-     9. Add the new object to the arrayOfCountries.
-     10. Create a response context which contains data (arrayOfCountries and the title) for the landing.leaf page.
-     11. Return and render the view and pass the context in.
+     2. Make country request to fetch the data (Future<[CountryWithDepartment]>).
+     3.  Look if the cookies are accepted by the user.
+     4. Populate a  context which the fetched data (arrayOfCountries and the title) for the landing.leaf page. Pass the usertype and the boolean value which tells the view if the user is logged in.
+     5. Return and render the view and pass the context in.
      */
     
+    func countryHandler(_ req: Request) throws -> Future<View> { // 1
+        
+        let data = try CountryRequest.init(ending: "departments").getCountriesWithDepartments(req) // 2
     
-    func countryHandler(_ req: Request) throws -> Future<View> { // 1.
-        
-        let client = try req.make(Client.self) // 2.
-        let heartToken = try req.session()["HEART_TOKEN"] ?? CryptoRandom().generateData(count: 16).base64EncodedString() // Create a token
-        
-        return client.get("http://localhost:9090/api/countries/").flatMap(to: View.self) { res in // 3.
-            return try res.content.decode([Country].self).flatMap(to: View.self) { countries in // 4.
-                
-                var arrayOfCountries = [CountryData]() // 5.
-                
-                for country in countries { // 6.
-                    
-                    let departments = try country.getDepartments(country: country, on: req) // 7.
-                    let data = CountryData(country: country, departments: departments) // 8.
-                    arrayOfCountries.append(data) // 9.
-                }
-                
-                let context = CountryContext(countries: arrayOfCountries, title: "Home") // 10.
-                try req.session()["HEART_TOKEN"] = heartToken // 5
-                return try req.view().render("landing", context) // 11.
-            }
-        }
+        let showCookieMessage = req.http.cookies["cookies-accepted"] == nil // 3
+        let context = CountryContext(countries: data, title: "Home", userLoggedIn: Auth.init(req: req).isAuthenticated(), isAdmin: Auth.init(req: req).isAdmin(), csrfToken: nil, showCookieMessage: showCookieMessage) // 4
+        return try req.view().render("landing", context) // 5
     }
     
     
-    /*
-     Function to make an API request to get all the ads of the selected department and ads of the sibling department. Returns the adList view.
-     1. Function return Future<View>
-     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
-     3. Decode filter and unwrap rhe string.
-     4. Sends an HTTP GET Request to a server and returns a view
-     5. Return and Decode JSON response to AdsOfPerimeterData. FlatMap future to View.self.
-     6. Return and render the view and pass the data in.
+    // MARK: - adList.leaf
+    
+    /**
+     # Function to make an API request to get all the ads of the selected department and ads of the sibling department. Returns the adList.leaf.
+     - Parameters:
+        - req: Request
+     - Throws: Abort Redirect
+     - Returns: Future<View>
+     
+     1. Decode request's query filters to DepartmentFilters.
+     2. Create a variable which contains a name of the department and a constant which contains a boolean value which determines whether to show demands or offers (default value is true)
+     3. If the departmentString is an empty string or a nil.
+     4.. Then set the value of the departmentString to be the department from the session.
+     5. If the value is still or an empty string throw abort and redirect the user to the landing page to select the department.
+     6. If the query string is not nil, save the preference (department selection) to the session.
+     7. Make an Ad Reques to fetch the data Future<AdsOfPerimeterData>.
+     8. Variable which contains a title name of the page.
+     9. If the show is true, title is "Offres".
+     10. Otherwise the title is "Demandes".
+     11. Populate the context.
+     12. Return and render the view and pass the data in.
      */
   
-    func adsOfPerimeterHandlers(_ req: Request) throws -> Future<View> { // 1.
+    func adsOfPerimeterHandler(_ req: Request) throws -> Future<View> {
         
-        let client = try req.make(Client.self) // 2.
-        // 3.
-        let show = true
-        let filters = try req.query.decode(DepartmentFilters.self)
-        guard let departmentString = (filters.department) else {throw Abort(.internalServerError)}
         
-        return client.get("http://localhost:9090/api/ads/all/\(departmentString)/").flatMap(to: View.self) { res in // 4.
-            return try res.content.decode(AdsOfPerimeterData.self).flatMap(to: View.self) { data in // 5.
-              
-                let context = AdContext(data: data, showOffer: show)
-                return try req.view().render("adList", context) // 6.
-                
-            }
+        let filters = try req.query.decode(DepartmentFilters.self) // 1
+        // 2
+        var departmentString = filters.department
+        let show = filters.offers ?? true
+        
+        if departmentString == "" || departmentString == nil {// 3
+            departmentString = UserPreference.init(req: req).departmentID // 4
+            guard departmentString != nil || departmentString == "" else {throw Abort.redirect(to: "/countries")} // 5
+        } else { // 6
+            UserPreference.init(req: req).departmentID = departmentString
         }
+    
+        let data = try AdRequest.init(ending: "all/\(departmentString!)").getAll(req) // 7
+        var title : String // 8
+             
+        // 9
+        if show == true {
+            title = "Offres"
+        } else { // 10
+            title = "Demandes"
+        }
+                
+        let context = AdContext(title: title, data: data, showOffer: show, isAdmin: Auth.isAdmin(.init(req: req))(), userLoggedIn: Auth.isAuthenticated(.init(req: req))()) // 11
+        return try req.view().render("adList", context) // 12
+                    
+        
     }
     
-    /*
-     Function to make an API request to get a single ad. Returns the offer view.
-     1. Function return Future<View>
-     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
-     3. Decode filter and unwrap the string.
-     4. Sends an HTTP GET Request to a server and returns a view
-     5. Return and Decode JSON response to AdData. FlatMap future to View.self.
-     6. Return and render the view and pass the data in.
-     */
+    // MARK: - offer.leaf
     
-    func getAdHandler(_ req: Request) throws -> Future<View> { // 1.
-        let client = try req.make(Client.self) // 2.
-        let string = try req.parameters.next(String.self) // 3.
-       
-        return client.get("http://localhost:9090/api/ads/\(string)/").flatMap(to: View.self) { res in // 4.
-            return try res.content.decode(AdData.self).flatMap(to: View.self) { data in // 5.
-                return try req.view().render("offer", data) // 6.
-                
-            }
-        }
-    }
-    
-   
- 
-    
-    /*
-     Function to make an API request to get all the ads of the selected department and ads of the sibling department. Returns the adList view.
-     1. Function return Future<View>
-     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
-     3. Get String parameter and UUID parameter from the url.
-     4. Create a boolean which store the value if the offers should be shown on the html.
-     5. If the string parameters is "offers" then th boolean = true, otherwise the boolean = false (show demands).
-     6. Sends an HTTP GET Request to a server and returns a view
-     7. Return and Decode JSON response to AdsOfPerimeterData. FlatMap future to View.self.
-     8. Creata a context.
-     9. Return and render the view with context data.
-     */
-
-    
-    func adsOfPerimeterHandler(_ req: Request) throws -> Future<View> { // 1.
-        
-        let client = try req.make(Client.self) // 2.
-        // 3.
-        let string = try req.parameters.next(String.self)
-        let departmentID = try req.parameters.next(UUID.self)
+    /**
+     # Function to make an API request to get a single ad. Returns the offer view.
+     - Parameters:
+        - req: Request
+     - Throws: Abort Redirect
+     - Returns: Future<View>
      
-        // 4.
-        var showOffers : Bool
-        // 5.
-        if string == "offers" {
-            showOffers = true
-        } else {
-            showOffers = false
-        }
-        
-        return client.get("http://localhost:9090/api/ads/all/\(departmentID)/").flatMap(to: View.self) { res in // 6.
-            return try res.content.decode(AdsOfPerimeterData.self).flatMap(to: View.self) { data in // 7.
-                
-                let context = AdContext(data: data, showOffer: showOffers) // 8.
-                return try req.view().render("adList", context) // 9.
-                
-            }
-        }
-    }
-    
-    /*
-     Function to make an API request to get a contact. Returns the contact view.
-     1. Function return Future<View>
-     2. Creates a generic Client which Connects to remote HTTP servers and sends HTTP requests receiving HTTP responses.
-     3. Decode filter and unwrap the string.
-     4. Sends an HTTP GET Request to a server and returns a view
-     5. Return and Decode JSON response to Contact. FlatMap future to View.self.
-     6. Create a link by calling a method which creates one.
-     7. Create a context.
-     8. Return and render the view and pass the data in.
+     1. Generate csrfToken and save it to the session.
+     2.  Extract the ad id from the request's parameters.
+     3. Make an Ad request to fetch the ad.
+     4. Populate a context.
+     5. Return and render the view and pass the context in.
      */
     
-    func getContactHandler(_ req: Request) throws -> Future<View> { // 1.
-        let client = try req.make(Client.self) // 2.
-        let string = try req.parameters.next(String.self) // 3.
+    func getAdHandler(_ req: Request) throws -> Future<View> {
         
-        return client.get("http://localhost:9090/api/contacts/\(string)/contact").flatMap(to: View.self) { res in // 4.
-            return try res.content.decode(Contact.self).flatMap(to: View.self) { data in // 5.
+        let ctoken = CSRFToken(req: req).addToken() // 1
+        let id = try req.parameters.next(UUID.self) // 2
+        let ad = try AdRequest.init(ending: "\(id)").getAd(req) // 2
+      
+        let context = AdInfoContext(title: "Ad", csrfToken: ctoken, ad: ad, userLoggedIn: Auth.isAuthenticated(.init(req: req))(), isAdmin: Auth.isAdmin(.init(req: req))()) // 4
+        return try req.view().render("offer", context) // 5
                 
-                let link = data.manipulateFBProfileLink(fbProfileURL: data.facebookLink) ?? "This link is broken" // 6.
-                
-                let context = ContactContext(title: "Contact", name: data.contactName, messenger: link) // 7.
-                return try req.view().render("contact", context) // 8.
-                
-            }
-        }
+         
     }
-    
-    /*
-     POST/REMOVE HEART
-     Handler to Add/Remove Heart to the Ad
-     1. Get the heartToken from the request's session. This is the token what was generated when the user enters to the website at the first time.
-     2. Check that the heartToken is not nil, if yes, create a new token and create a heartToken session. Unwrap the token ensure that the token was generated properly.
-     3. Extact the UUID from the request's parameters.
-     4. Maka a client.
-     5. Make a post request to the api and encode data to json to send it.
-     6. Map the result to Response
-     7. Redirect to the page (refresh).
-     */
-    
-    func heartPostHandler(_ req: Request) throws -> Future<Response> {
-        
-        var heartToken = try req.session()["HEART_TOKEN"] // 1
-       // 2.
-        if heartToken == nil {
-            heartToken = try CryptoRandom().generateData(count: 16).base64EncodedString()
-            try req.session()["HEART_TOKEN"] = heartToken
-        }
 
-        let adID = try req.parameters.next(UUID.self) // 3.
-        let client = try req.make(Client.self) // 4.
-        // 5.
-        return client.post("http://localhost:9090/api/hearts", beforeSend: { req in
-            let data = Heart(token: heartToken!, adID: adID)
-           try req.content.encode(data, as: .json) 
-            
-        }).map(to: Response.self) { res in // 6.
-            return req.redirect(to: "\(adID)")
-            }
-        }
+    // MARK: - images.leaf
     
-    
-    /// Route handler to return the image view:
-    /// 1. Handler takes a request and returns a Future<View>.
-    /// 2. Extract the id of the request's parameter.
-    /// 3. Make a client.
-    /// 4. Send a get request to the url and flatMap a response to the future<View>.
-    /// 5. In the completion handler decode a content of the response to an array of ImageData.
-    /// 6. Create a context and pass in the context, adID and the array of ImageData. Token is nil.
-    /// 7. Return and render the showImage -leaf with the context
+    /**
+     # Route handler to return the image view:
+     - Parameters:
+            - req: Request
+     - Throws: Abort Redirect
+     - Returns: Future<View>
+     
+     1. Handler takes a request and returns a Future<View>.
+     2. Extract the id of the request's parameter.
+     3. Make an image request to fetch the data.
+     4. If the http code of the response is 200:  In the completion handler decode a content of the response to an array of ImageData.
+     5. Create a context and pass in the context, adID and the array of ImageData. Token is nil.
+     6. Return and render the images -leaf with the context.
+     7.  If the resolving future resolves as an error, throw abort and redirect to the error.leaf page.
+     8.  If the status code is something else than 200, throw abort and redirect to the error.leaf page.
+    */
     func getImagesHandler(_ req: Request) throws -> Future<View> { // 1
         
         let adID = try req.parameters.next(UUID.self) // 2
-        
-        let client = try req.make(Client.self) // 3
-        return client.get("http://localhost:9090/aws/\(adID)/images").flatMap(to: View.self) { res in // 4
-            let data = try res.content.decode([ImageLink]?.self) // 5
-            
-            let context = ImageLinksContext(title: "Images", imagesData: data, adID: adID) // 6
-            return try req.view().render("images", context) // 7
+    
+        return try ImageRequest.init(ending: "\(adID)/images").getImages(req).flatMap(to: View.self) { res in // 3
+            // 4
+            if res.http.status.code == 200 {
+                
+                return try res.content.decode([ImageLink]?.self).flatMap(to: View.self) { links in
+                    
+                    let context = ImageLinksContext(title: "Images", imagesData: links, adID: adID, isAdmin: Auth.isAdmin(.init(req: req))(), userLoggedIn: Auth.isAuthenticated(.init(req: req))()) // 5
+                    return try req.view().render("images", context) // 6
+                    // 7
+                }.catchMap({ error in
+                    print(error)
+                    throw Abort.redirect(to: "/error")
+                })
+            } else { // 8
+                throw Abort.redirect(to: "/error")
+            }
         }
     }
-    
-  
-    
 }
 
-/*
- Data filters
- - selected country
- - selected department (id)
+// MARK: - Data types for query filters
+
+/**
+ # DepartmentFilters
+ - country <String?> : selected country
+ - department <String?> : selected department (id)
+ - offers <Bool?> : Boolean value which determines whether to show offers or demands
  */
 
 struct DepartmentFilters: Content {
     var country: String?
     var department: String?
+    var offers: Bool?
 }

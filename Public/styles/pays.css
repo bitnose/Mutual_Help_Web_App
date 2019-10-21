@@ -36,6 +36,9 @@ body {
 /*     letter-spacing: 3px; */
     text-align: center;
     color: #111;
+
+    
+
 /* 
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
@@ -277,9 +280,8 @@ ul, li {
 
 
 
-
-
 #footer {
+
 	width: 100%;
 	color: #888;
 	position: fixed;
@@ -290,6 +292,7 @@ ul, li {
 	background-color: rgba(252,251,249,0.86);
 }	
 #footerFrame {
+   
 	height: 188px;
 	position: relative;
 }
@@ -321,12 +324,14 @@ ul, li {
 	opacity: 0.55;
 }
 #footerMobileFrame {
+    
 	margin: 32px 0px 0px 0px;
 	width: 100%; 
 	border-top: 1px solid #fff;
 	display: none;
 }
 #footerMobile {
+    
 	margin: 20px auto 0px auto;
 	width: 170px;
 /* 	background-color: blue; */
@@ -370,6 +375,9 @@ ul, li {
 
 
 /*  I C O N S  */
+
+
+
 
 #adControlBar {
 	position: relative;
@@ -461,6 +469,37 @@ button {
 	left: 0px;
 }
 #likeIcon img {height: 46px;margin-bottom: 4px;}
+
+
+
+.btn-group button {
+    
+    width: 200px;
+    height: 36px;
+    font-size: 14px;
+    line-height: 26px;
+    background-color: #ffcc33; /* Black background */
+    border-radius: 10px;
+    border:2px solid #fcfbf9;
+    border: none;
+    letter-spacing: 1px;
+    color: #fff; /* White text */
+    z-index: 101;
+
+}
+
+.btn-group button:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+    background-color:#fff;
+    color: #111;
+}
+
+
+
 
 
 /*  M E D I A  */

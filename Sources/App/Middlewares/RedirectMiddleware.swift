@@ -8,7 +8,7 @@
 import Foundation
 import Vapor
 
-/// Custom RedirectMiddleware looks if a user is authenticated: If not it redirects the user to the login page.
+/// # Custom RedirectMiddleware looks if a user is authenticated: If not it redirects the user to the login page.
 /// 1. Called with each Request that passes through this middleware.
 /// 2. Look if the user is authenticated: If the value is equal to false.
 /// 3. Throw an abort and redirect to the "login" page.

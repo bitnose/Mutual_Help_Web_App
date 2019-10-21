@@ -1,31 +1,45 @@
 #set("content") {
-
+<div id="centerFrame">
+</br>
 <h1>#(title)</h1>
+</br>
 #if(countries) {
-<tbody>
+
     #for(data in countries) {
-    <p>
-    <h3><a href="#(country.id)"> #(data.country.country)</a></h3>
-    <p>
+   </br>
+    <h3>#uppercase(data.country.country)</h3>
+    </br>
+    
+    <form method="post" action="/admin/countries/delete/#(data.country.id)" >
+               #if(csrfToken) {
+                   <input type="hidden" name="csrfToken" value="#(csrfToken)">
+               }
+           <input class="submitButton" type="submit" value="Remove"/><td>
+           </form>
+    </br></br></br>
+    
     #for(department in data.departments) {
-    <ul>
-        <li>
-            <td><a href="#(department.id)"> #(department.departmentNumber) #(department.departmentName)</a></td>
-        </li>
-    </ul>
+    <h4>
+        <a href="/admin/departments/#(department.id)"> #(department.departmentNumber). #(department.departmentName)</a>
+    </h4>
+
     }
-    
-    
-    <button type="button"><a href="/departments/perimeter">Create perimeter</a></button>
-    
+     </br>
+    <div class="btn-group">
+    <button><a href="/admin/departments/perimeter">Create perimeter</a></button>
+    </div>
+     </br>
+
     }
-    </body>
+    </br>
     } else {
     <h2> There aren't any ads yet!</h2>
     }
-    }
     
-    #embed("base")
+    
+    </div>
+    }
+#embed("base")
     
     
 

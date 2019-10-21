@@ -1,48 +1,104 @@
 .container1 input[type=text] {
-    padding:5px 0px;
-    margin:5px 5px 5px 0px;
+    font-size: 16px;
+    margin: 4px 2px;
+    width: 350px;
+    height: 36px;
+    line-height: 26px;
+    border-radius: 5px;
+    border: 1px solid black;
+    color: #222;
+    letter-spacing: 1px;
+    text-align: left;
+    text-indent: 5px;
+    /*     font-weight: 700; */
+    cursor: auto;
+    /*     text-transform: uppercase; */
+    z-index: 101;
 }
 
 .container2 input[type=text] {
-    padding:5px 0px;
-    margin:5px 5px 5px 0px;
+    font-size: 16px;
+    width: 350px;
+    height: 36px;
+    line-height: 26px;
+    margin: 4px 2px;
+    border-radius: 5px;
+    border: 1px solid black;
+    color: #222;
+    letter-spacing: 1px;
+    text-align: left;
+    text-indent: 5px;
+    /*     font-weight: 700; */
+    cursor: auto;
+    /*     text-transform: uppercase; */
+    z-index: 101;
 }
+
 
 .add_form_field1
 {
-    background-color: #0066ff;
+    
+    width: 200px;
+    height: 40px;
+    font-size: 14px;
+    line-height: 26px;
+    background-color: #222;
+    border-radius: 10px;
     border: none;
-    color: white;
-    padding: 8px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    color: #fff;
+    letter-spacing: 1px;
     cursor: pointer;
-    border:1px solid #a9a9a9;
+    z-index: 101;
+    padding: 8px 32px;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 4px 2px;
+    
+    
+    
+
+
 }
 
 .add_form_field2
 {
-    background-color: #0066ff;
+    width: 200px;
+    height: 40px;
+    font-size: 14px;
+    line-height: 26px;
+    background-color: #222;
+    border-radius: 10px;
     border: none;
-    color: white;
-    padding: 8px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    color: #fff;
+    letter-spacing: 1px;
     cursor: pointer;
-    border:1px solid #a9a9a9;
+    z-index: 101;
+    padding: 8px 32px;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 4px 2px;
 }
+
+.add_form_field2:hover {
+    background-color:#ffcc33;
+    color: #222;
+}
+.add_form_field1:hover {
+    background-color:#ffcc33;
+    color: #222;
+}
+
+
+
+
+
 
 input{
     border: 1px solid #a9a9a9;
     width: 600px;
     height: 40px;
     margin-bottom:14px;
+    border-radius: 10px;
 }
 
 .delete{
@@ -50,6 +106,7 @@ input{
     border: none;
     color: white;
     padding: 5px 15px;
+    border-radius: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -57,3 +114,24 @@ input{
     margin: 4px 2px;
     cursor: pointer;
 }
+
+.delete:hover {
+    background-color:#ffcc33;
+    color: #222;
+}
+
+/*
+width: 100px;
+height: 36px;
+font-size: 14px;
+line-height: 26px;
+background-color: #222;
+border-radius: 10px;
+border: none;
+color: #fff;
+letter-spacing: 1px;
+   font-weight: 700;
+cursor: pointer;
+    text-transform: uppercase;
+z-index: 101;
+*/
