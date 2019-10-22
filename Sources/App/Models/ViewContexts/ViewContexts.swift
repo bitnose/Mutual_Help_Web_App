@@ -120,6 +120,7 @@ struct AdData : Content {
     let city : City
     let hearts : Int
     let images : [String]?
+    let createdAt : String
 }
 
 /**
@@ -383,7 +384,7 @@ struct AdOfUser : Content {
     let offers : [Offer]
     let city : City
     let hearts : Int
-    let createdAt : Date?
+    let createdAt : String
 }
 
 
@@ -445,6 +446,7 @@ struct AdDataContent : Content {
     let demands : [Demand]
     let offers : [Offer]
     let city : City
+    let createdAt : Date
 }
 
 /**
@@ -565,6 +567,7 @@ struct AdWithUser : Content {
     let city : City
     let department : Department
     let hearts : Int
+    let createdAt: String
 
 }
 

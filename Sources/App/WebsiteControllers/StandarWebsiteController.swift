@@ -153,6 +153,8 @@ struct StandardWebsiteController : RouteCollection {
                     print(error, "Error with decoding data from the response")
                     throw Abort.redirect(to: "/error")
                 }
+                
+                
             } else {
                  data = nil // 12
             }

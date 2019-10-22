@@ -29,6 +29,8 @@
                         <div class="offerTitleText">
                             <h2>#(ad.department.departmentName) (#(ad.department.departmentNumber))</h2>
                             <h3>#(ad.city.city)</h3>
+                            <h6>#(ad.createdAt)</h6>
+                            
                         </div>
                         
                         
@@ -66,7 +68,10 @@
                                 </ul>
                             </div>
                         </div>
+                        
+                         <h6> #capitalize("Special Note"): #(ad.note)</h6>
                     </div>
+                    
                     <div id="offerViewIcons">
 
                         #if(count(ad.images)>0) {
@@ -75,7 +80,7 @@
                         </a>
                         }
 
-                        <div id="moreInfoIcon"><img src="/Images/MoreInfo.png" /></div>
+                       
                     </div>
                 </div>
                 

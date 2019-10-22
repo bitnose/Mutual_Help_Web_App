@@ -235,6 +235,7 @@ ul, li {
 .offerItem h2 {font-size: 22px;letter-spacing: 1px;text-transform: uppercase;}
 .offerItem h3 {letter-spacing: 0.4px;}
 .offerItem h4 {font-size: 22px;letter-spacing: 0.4px;text-transform: uppercase;}
+.offerItem h6 {font-size: 12px;letter-spacing: 0.4px;}
 
 
 .offerText {

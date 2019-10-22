@@ -20,7 +20,7 @@
                     <a href="/ads/#(adObject.adID)">
                         <div class="adItem">
                             <div class="adTitle">
-                                <h4>#(adObject.department.departmentName)(#(ad.department.departmentNumber))</h4>
+                                <h4>#(adObject.department.departmentName)(#(adObject.department.departmentNumber))</h4>
                                 <h5>#(adObject.city.city)</h5>
                             </div>
                             <div class="adText">
@@ -31,7 +31,7 @@
                                     #if(count(adObject.offers) > 0) {
                                     #for(offer in adObject.offers) {
                                     <li>
-                                        #(offer.offer)
+                                        #capitalize(offer.offer)
                                         </td>
                                         }} else {<td> No offers! </li>}
                                     } else {
@@ -39,7 +39,7 @@
                                     #if(count(adObject.demands) > 0) {
                                     #for(demand in adObject.demands) {
                                     <li>
-                                        #(demand.demand)
+                                        #capitalize(demand.demand)
                                         </td>
                                         }} else {<td> No Demands! </li>}
                                     }

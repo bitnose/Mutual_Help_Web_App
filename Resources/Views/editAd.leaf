@@ -81,7 +81,7 @@
                     <label for="note"> Notes: </label>
                     <br>
                     <input type="text" name="note" class="form-control"
-                    id="note" value="#(data.note)" maxlength="50"/>
+                    id="note" value="#(data.note)" maxlength="100"/>
                 </div>
                 
                 <br>

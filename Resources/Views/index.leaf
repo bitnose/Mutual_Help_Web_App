@@ -26,7 +26,8 @@
         <div id="offerBlock">
             
             <div class="offerItem">
-                
+               <div class="offerTitle">
+               
                 #if(data) {
                 <div id="likeIcon" class="iconDefault">
                     <img src="/Images/MyHeart.png"/>
@@ -34,13 +35,14 @@
                     <h6>#(data.hearts)</h6>
                 </div>
                 
-                <div class="offerTitle">
+                
                     
                     <div class="offerTitleText">
                         <h2>#(data.city.city)</h2>
-                        <h2>"#(data.note)"</h2>
-                        <h6>created At: #(data.createdAt)</h6>
+                        <h6>"#(data.note)"</h6>
+                        <h6>#(data.createdAt)</h6>
                     </div>
+                    
                    
                     
                         <div id="contactIcon" class="iconDefault"><img src="/Images/LittleGuy.png" /><h6></h6></div>

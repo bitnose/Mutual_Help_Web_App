@@ -36,8 +36,7 @@
                         <div class="offerTitleText">
                             <h2>#(ad.department.departmentName) (#(ad.department.departmentNumber))</h2>
                             <h3>#(ad.city.city)</h3>
-                            <h6>"#(ad.ad.note)"</h6>
-                           <h6>#(ad.ad.createdAt)</h6>
+                           <h6>#(ad.createdAt)</h6>
                         </div>
              
                     </div>
@@ -84,14 +83,16 @@
                                     <input class="submitButton" type="submit" value="Delete User"/>
                                     </form>
                                 </div>
+                                 <h6>Special Note: "#(ad.ad.note)"</h6>
+                                 <br/>
                     <div id="offerViewIcons">
+                    
                                  #if(count(ad.ad.images)>0) {
                                          <a href="/ads/images/#(ad.ad.id)">
                                              <div id="photoIcon"><img src="/Images/Photo.png" /></div>
                                          </a>
                                          }
-                                       <a href="/self/edit/#(ad.ad.id)">
-                                      <div id="moreInfoIcon"><img src="/Images/MoreInfo.png"/></div></a>
+                                      
                                                              
                                              </div>
                     

@@ -118,7 +118,7 @@ extension CreateAdUserData : Validatable, Reflectable {
         
         var validations = Validations(CreateAdUserData.self) // 2
         try validations.add(\.city, .ascii && .count(1...30)) // 3
-        try validations.add(\.note, .ascii && .count(...50)) // 4
+        try validations.add(\.note, .ascii && .count(...100)) // 4
         
         validations.add("select a department") { model in // 5
             
@@ -148,7 +148,7 @@ extension AdInfoPostData : Validatable, Reflectable {
         
         var validations = Validations(AdInfoPostData.self) // 2
         try validations.add(\.city, .ascii && .count(1...30)) // 3
-        try validations.add(\.note, .ascii && .count(...50)) // 4
+        try validations.add(\.note, .ascii && .count(...100)) // 4
         
         validations.add("select a department") { model in // 5
             
