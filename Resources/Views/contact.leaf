@@ -1,0 +1,94 @@
+
+
+#set("content") {
+<div id="adHeader">
+    <img src="/Images/logo.svg"/>
+
+</div>
+
+ 
+<br>
+<div id="contactIcon"><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /><img src="/Images/LittleGuy.png" /></div>
+<br>
+
+<h1> Contact </h1>
+
+<br>
+<br>
+
+#if(contactData.youAccepted == true && contactData.otherAccepted == true) {
+    <br>
+    <h3>#(contactData.firstname) #(contactData.lastname)</h3>
+    <br>
+    <h3>#(contactData.email)</h3>
+
+<br>
+}
+
+<br>
+<br>
+
+#if(contactData.youAccepted == false &&contactData.otherAccepted == true)  {
+<li>You have a contact request from this user!</li>
+
+<li>#(contactData.firstname)</li>
+<form method="post", action="/#(contactData.contactID)/#(adID)/request/accept">
+#if(csrfToken) {
+               <input type="hidden" name="csrfToken" value="#(csrfToken)">
+                    
+                       }
+    <button class="subnmitButton" type="submit">Accept</button>
+</form>
+
+ <br>
+ <br>
+
+ <form method="post", action="/#(contactData.contactID)/#(adID)/request/decline">
+
+ #if(csrfToken) {
+                <input type="hidden" name="csrfToken" value="#(csrfToken)">
+                   
+                        }
+     <button class="subnmitButton" type="submit">Decline</button>
+ </form>
+
+}
+
+<br>
+<br>
+
+#if(contactData.youAccepted == true && contactData.otherAccepted == false) {
+
+<li>Contact request has been sent! </li>
+}
+
+
+<br>
+<br>
+
+#if(contactData.youAccepted == false && contactData.otherAccepted == false)  {
+    <li> Send a contact request for this user</li>
+     <lix>#(contactData.firstname)</li>
+
+        <form method="post", action="/ads/#(adID)/contact">
+                         
+            #if(csrfToken) {
+            <input type="hidden" name="csrfToken" value="#(csrfToken)">
+            }
+            <button class="subnmitButton" type="submit">Send</button>
+        </form>
+                         
+
+}
+
+</br>
+<a href="/ads/#(adID)"><button class="subnmitButton" type="submit"> ← Back</button></a>
+
+
+
+
+
+}
+#embed("base")
+
+    

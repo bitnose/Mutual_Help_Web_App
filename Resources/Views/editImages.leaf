@@ -1,0 +1,68 @@
+#set("content") {
+
+<br/>
+
+
+
+#if(count(imagesData)>0) {
+ <br/>
+            #for(image in imagesData) {
+
+                <form method="post">
+                #if(csrfToken) {
+                <input type="hidden" name="csrfToken" value="#(csrfToken)">
+                }
+                <input type="hidden" name="imageName" value="#(image.imageName)">
+ <br/>
+                <img src="#(image.imageLink)"/>
+                <br/>
+                <input class="submitButton" type="submit" value="Delete"/>
+                </form>
+ <br/>
+}
+}
+<br/>
+
+#if(message) {
+<div calss="alert alert-danger" role="alert">
+Please fix the following errors: <br />
+#(message)
+</div>
+
+}
+<br/>
+
+
+<form method="post", action="/#(adID)/edit/image/post", enctype="multipart/form-data">
+    
+    #if(csrfToken) {
+    <input type="hidden" name="csrfToken" value="#(csrfToken)">
+        }
+        
+        
+        <br/>
+
+        <div class="form-group">
+            <label>
+                Upload images
+            </label>
+            <br/>
+            <input type="file" name="image"
+            class="form-control-file" id="image"/>
+        </div>
+        
+        <button class="subnmitButton" type="submit">Upload</button>
+
+</form>
+
+</br>
+<a href="/self/index"><button class="subnmitButton" type="submit"> Next </button></a>
+
+
+    }
+    
+    #embed("base")
+
+
+
+

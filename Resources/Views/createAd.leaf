@@ -1,0 +1,84 @@
+#set("content") {
+<div id="adHeader">
+    <br>
+    <h2>#(title)</h2>
+    <br>
+    
+    #if(message) {
+    <div class="alert alert-danger" role="alert">
+        Please fix the following errors: <br />
+        #(message)
+    </div>
+    
+    }
+    <br>
+    
+    <form method="post">
+        
+        #if(csrfToken) {
+        <input type="hidden" name="csrfToken" value="#(csrfToken)">
+            }
+            <br>
+            <h4> Location </h4>
+            <br>
+            
+            <div class="form-group">
+                <label for="city"> City: </label>
+                <br/>
+                <input type="text" name="city" class="form-control"
+                id="city" maxlength="30"/>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="departmentID">Department</label>
+                <br>
+                <select name="departmentID" class="form-control" id="departmentID">
+                    <option selected disabled hidden> Selectionnez votre Département</option>
+                    #for(department in departments) {
+                    <option value="#(department.id)">
+                        #(department.departmentNumber) #(department.departmentName)
+                    </option>
+                    }
+                </select>
+            </div>
+      <br>
+      <h4> Demands and Offers </h4>
+                    <br>
+                    <label for="demands"> Demands </label>
+                    <br>
+                    <div class="container1">
+                        <button class="add_form_field1">Add Demand&nbsp; <span maxlength="100" style="font-size:16px; font-weight:bold;"> + </span></button>
+                        <br>
+                    </div>
+                    
+                    
+                    <br>
+                    <label for="offers"> Offers </label>
+                    <br>
+                    <div class="container2">
+                        <button class="add_form_field2">Add Offer&nbsp; <span maxlength="100" style="font-size:16px; font-weight:bold;"> + </span></button>
+                        <br>
+                    </div>
+                    <br>
+                    <h4>Ad Info</h4>
+                    <br>
+                    <div class="form-group">
+                        <label for="note"> Notes: </label>
+                        <br>
+                        <input type="text" name="note" class="form-control"
+                        id="note" maxlength="100"/>
+                    </div>
+                    <br>
+                    <button class="subnmitButton" type="submit">Submit</button>
+                    
+            </form>
+</div>
+
+<br>
+<a href="/self/index"><button class="subnmitButton" type="submit">Cancel</button></a>
+
+}
+#embed("base")
+
+
+
