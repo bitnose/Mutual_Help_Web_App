@@ -36,7 +36,7 @@
                         <div class="offerTitleText">
                             <h2>#(ad.department.departmentName) (#(ad.department.departmentNumber))</h2>
                             <h3>#(ad.city.city)</h3>
-                           <h6>#(adr.createdAt)</h6>
+                            <h6>#(ad.createdAt)</h6>
                         </div>
              
                     </div>
