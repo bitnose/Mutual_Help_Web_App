@@ -36,6 +36,7 @@ final class AdminAccessMiddleware : Middleware {
         return client.get("http://localhost:9090/api/users/access", headers: auth.headers).flatMap(to: Response.self) { res in // 6
             return try res.content.decode(User.Public.self).flatMap(to: Response.self) { user in // 7
                 if user.userType == .admin { // 8
+                    print("User is admin")
                     return try next.respond(to: request) // 9
                 } else {
                     throw Abort.redirect(to: "/error") // 10

@@ -20,16 +20,16 @@ final class Ad : Codable {
     
     var id : UUID?
     var note : String
- //   var generosity : Int
+    var generosity : Int?
     var images : [String]?
     var cityID : UUID
     var userID : UUID
     
     /// # Initialize
-    init(note: String, images: [String]? = nil, cityID: UUID, userID: UUID) {
+    init(note: String, generosity : Int?, images: [String]? = nil, cityID: UUID, userID: UUID) {
         
         self.note = note
-  //      self.generosity = generosity
+        self.generosity = generosity
         self.images = images
         self.cityID = cityID
         self.userID = userID

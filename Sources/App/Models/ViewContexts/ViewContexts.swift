@@ -446,7 +446,7 @@ struct AdDataContent : Content {
     let demands : [Demand]
     let offers : [Offer]
     let city : City
-    let createdAt : Date
+    let createdAt : String
 }
 
 /**
