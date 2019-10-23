@@ -10,18 +10,27 @@ import Leaf
 
 // MARK: - AdRequest
 
-/// AdRequest : Helper to create an ad requests
+/// # AdRequest : Helper to create an ad requests
 /// - resource : The base URL to make an ad request to the API
+/// - config = EegjAPIConfiguration
 /// - ending : Ending of the URL / API
+
+
 struct AdRequest {
-    let resource: URL
     
+    let resource: URL
+    private let config = EegjAPIConfiguration()
     init(ending: String) {
+        
+        // Get the configurations
+        let eegjConfig = config.setup()
+        
+        let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/ads/\(ending)"
         /// Creates an url combining the resourceString and resource URL
-        let resourceString = "http://localhost:9090/api/ads/\(ending)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }
+        
         self.resource = resourceURL
     }
     

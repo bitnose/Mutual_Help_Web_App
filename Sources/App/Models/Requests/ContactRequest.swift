@@ -15,14 +15,17 @@ import Crypto
 struct ContactRequest {
     
     let resource: URL
-    
+    private let config = EegjAPIConfiguration()
     init(ending: String) {
-        /// Creates an url combining the resourceString and resource URL
-        let resourceString = "http://localhost:9090/api/users/\(ending)"
+        // Get the configurations
+        let eegjConfig = config.setup()
+        
+        let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/users/\(ending)"
+        // Creates an url combining the resourceString and resource URL
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }
-        
+        // Return the resourceURL
         self.resource = resourceURL
     }
 

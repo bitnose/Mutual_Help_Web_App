@@ -14,10 +14,14 @@ import Leaf
 /// - ending : Ending of the URL / API
 struct CityRequest {
     let resource: URL
-    
+    private let config = EegjAPIConfiguration()
     init(ending: String) {
+        
+        // Get the configurations
+        let eegjConfig = config.setup()
+        
+        let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/cities/\(ending)"
         /// Creates an url combining the resourceString and resource URL
-        let resourceString = "http://localhost:9090/api/cities/\(ending)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

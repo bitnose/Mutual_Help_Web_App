@@ -138,8 +138,11 @@ struct StandardWebsiteController : RouteCollection {
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 5
         let client = try req.make(Client.self) // 6
         
+        let config = EegjAPIConfiguration()
+        let eegjConfig = config.setup()
+        
         // TODO : - Update
-        return client.get("http://localhost:9090/api/ads/self", headers: auth.headers).flatMap(to: View.self) { res in // 7
+        return client.get("http://\(eegjConfig.hostname):\(eegjConfig.port)/ads/self", headers: auth.headers).flatMap(to: View.self) { res in // 7
             
             var data : Future<AdOfUser>? // 8
              // 9

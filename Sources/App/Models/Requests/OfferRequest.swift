@@ -14,11 +14,15 @@ import Leaf
 /// - resource : The base URL to make a offer request to the API
 /// - ending : Ending of the URL / API
 struct OfferRequest {
-    let resource: URL
-    
+   let resource: URL
+    private let config = EegjAPIConfiguration()
     init(ending: String) {
+        
+        // Get the configurations
+        let eegjConfig = config.setup()
+        
+        let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/offers/\(ending)"
         /// Creates an url combining the resourceString and resource URL
-        let resourceString = "http://localhost:9090/api/offers/\(ending)"
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

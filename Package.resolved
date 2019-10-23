@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "Fluent",
+        "repositoryURL": "https://github.com/vapor/fluent.git",
+        "state": {
+          "branch": null,
+          "revision": "783819d8838d15e1a05b459aa0fd1bde1e37ac26",
+          "version": "3.2.1"
+        }
+      },
+      {
         "package": "HTTP",
         "repositoryURL": "https://github.com/vapor/http.git",
         "state": {
@@ -89,6 +98,15 @@
           "branch": null,
           "revision": "fa5b5de62bd68bcde9a69933f31319e46c7275fb",
           "version": "1.0.2"
+        }
+      },
+      {
+        "package": "SQL",
+        "repositoryURL": "https://github.com/vapor/sql.git",
+        "state": {
+          "branch": null,
+          "revision": "50eaeb8f52a1ce63f1ff3880e1114dd8757a78a6",
+          "version": "2.3.2"
         }
       },
       {
@@ -161,6 +179,15 @@
           "branch": null,
           "revision": "c86ada59b31c69f08a6abd4f776537cba48d5df6",
           "version": "3.3.0"
+        }
+      },
+      {
+        "package": "VaporExt",
+        "repositoryURL": "https://github.com/vapor-community/vapor-ext.git",
+        "state": {
+          "branch": null,
+          "revision": "8e3ddf8b78c8436038d14712ac44f10aca78fe87",
+          "version": "0.3.4"
         }
       },
       {

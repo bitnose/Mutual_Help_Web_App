@@ -185,7 +185,12 @@ struct UserWebsiteController : RouteCollection  {
         let encodedPassword = data.password.toBase64() // 3
         let loginPostData = LoginPostData(csrfToken: nil, username: encodedUsername, password: encodedPassword) // 4
         
-        return client.post("http://localhost:9090/api/users/login", beforeSend: { req in // 5
+        
+        let config = EegjAPIConfiguration()
+        // Get the configurations
+        let eegjConfig = config.setup()
+        
+        return client.post("http://\(eegjConfig.hostname):\(eegjConfig.port)/users/login", beforeSend: { req in // 5
             
             try req.content.encode(loginPostData) // 6
             
@@ -232,8 +237,13 @@ struct UserWebsiteController : RouteCollection  {
         guard let token = Auth(req: req).token else { auth.logout(); throw Abort.redirect(to: "/login")} // 2
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 3
         
+        
         let client = try req.make(Client.self) // 4
-        return client.delete("http://localhost:9090/api/users/logout", headers: auth.headers).map(to: Response.self) { _ in // 5
+        let config = EegjAPIConfiguration()
+        // Get the configurations
+        let eegjConfig = config.setup()
+        return
+            client.delete("http://\(eegjConfig.hostname):\(eegjConfig.port)/users/logout", headers: auth.headers).map(to: Response.self) { _ in // 5
             // 6
             auth.logout()
             print("User has logged out")
