@@ -32,8 +32,9 @@ final class AdminAccessMiddleware : Middleware {
         auth.headers.bearerAuthorization = BearerAuthorization(token: token) // 4
     
         let client = try request.make(Client.self) // 5
-        
-        return client.get("http://localhost:9090/api/users/access", headers: auth.headers).flatMap(to: Response.self) { res in // 6
+        let config = EegjAPIConfiguration()
+        let eegjConfig = config.setup()
+        return client.get("http://\(eegjConfig.hostname):\(eegjConfig.port)/users/access", headers: auth.headers).flatMap(to: Response.self) { res in // 6
             return try res.content.decode(User.Public.self).flatMap(to: Response.self) { user in // 7
                 if user.userType == .admin { // 8
                     print("User is admin")

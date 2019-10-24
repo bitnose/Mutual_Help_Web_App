@@ -23,6 +23,7 @@ struct OfferRequest {
         
         let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/offers/\(ending)"
         /// Creates an url combining the resourceString and resource URL
+           
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }

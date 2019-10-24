@@ -22,6 +22,7 @@ struct ImageRequest {
         
         let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/aws/\(ending)"
         /// Creates an url combining the resourceString and resource URL
+           
         guard let resourceURL = URL(string: resourceString) else {
             fatalError()
         }
