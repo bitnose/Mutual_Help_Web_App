@@ -26,7 +26,7 @@
                 <label for="city"> City: </label>
                 <br/>
                 <input type="text" name="city" class="form-control"
-                id="city" maxlength="30"/>
+                id="city" maxlength="35"/>
             </div>
             <br>
             <div class="form-group">

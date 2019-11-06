@@ -26,7 +26,7 @@
             <label for="username">Email</label>
             </br>
             <input type="text" name="username" class="form-control"
-            id="username" maxlength="30"/>
+            id="username" maxlength="60"/>
         </div>
         </br>
         

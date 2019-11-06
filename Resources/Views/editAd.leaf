@@ -25,7 +25,7 @@
             <label for="city">City</label>
             <br>
             <input type="text" name="city" class="form-control"
-            id="city" maxlength="30" value="#(data.city.city)"/>
+            id="city" maxlength="35" value="#(data.city.city)"/>
             
             <input type="hidden" name="cityID" class="form-control"
             id="cityID" value="#(data.city.id)"/>
@@ -58,7 +58,7 @@
                    
                     <button class="add_form_field1">Add Demand&nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
                     #for(demand in data.demands){
-                    <div><input type="text" name="demands[]" id="demands" value="#(demand.demand)" maxlength="50"></div>
+                    <div><input type="text" name="demands[]" id="demands" value="#(demand.demand)" maxlength="100"></div>
                     }
                 </div>
                 <br>
@@ -70,7 +70,7 @@
                     
                     <button class="add_form_field2">Add Offer&nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
                     #for(offer in data.offers){
-                    <div><input type="text" name="offers[]" id="offers" value="#(offer.offer)" maxlength="50"></div>
+                    <div><input type="text" name="offers[]" id="offers" value="#(offer.offer)" maxlength="100"></div>
                     }
                 </div>
                 

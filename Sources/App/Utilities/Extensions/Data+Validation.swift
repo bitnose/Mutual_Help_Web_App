@@ -20,24 +20,25 @@ import Vapor
 /// 3. Add a validator to ensure RegisterData's firstname and lastname contains only alphanumeric characters and the count of the characters is 1-20.
 /// 4. Add a validator to ensure RegisterData's email is a valid email address.
 /// 5. Add a validator to ensure RegisterData's password's character's count is 8-20 and it's alphanumeric
-/// 6. Return the validations for Vapor to test.
 /// # Custom Validator
-/// 7. Use Validation's add(_:_:) to add a custom validator for RegisterData. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
-/// 8. Verify that password and confirmPassword match.
-/// 9. If they don't, throw BasicValidationError.
-/// 10. Use Validation's add(_:_:) to add a custom validator for RegisterData. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
-/// 11. Verify that iAcceptTC is not nil.
-/// 12. If it's not, throw BasicValidationError.
-/// 13. Return the validations for Vapor to test.
+/// 6. Use Validation's add(_:_:) to add a custom validator for RegisterData. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
+/// 7. Verify that password and confirmPassword match.
+/// 8. If they don't, throw BasicValidationError.
+/// 9. Use Validation's add(_:_:) to add a custom validator for RegisterData. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
+/// 10. Verify that iAcceptTC is not nil.
+/// 11. If it's not, throw BasicValidationError.
+/// 12. Ensure if the password is a a strong password.
+/// 13. If not throw an error.
+/// 14. Return the validations for Vapor to test.
 extension RegisterData: Validatable, Reflectable {
     
     static func validations() throws -> Validations<RegisterData> { // 1
         
         var validations = Validations(RegisterData.self) // 2
-        try validations.add(\.firstname, .alphanumeric && .count(1...30)) // 3
-        try validations.add(\.lastname, .alphanumeric && .count(1...30)) // 3
-        try validations.add(\.email, .ascii && .count(5...30)) // 4
-        try validations.add(\.password, .count(8...30) && .alphanumeric ) // 5
+        try validations.add(\.firstname, .alphanumeric && .count(1...35)) // 3
+        try validations.add(\.lastname, .alphanumeric && .count(1...35)) // 3
+        try validations.add(\.email, .ascii && .count(5...60)) // 4
+        try validations.add(\.password, .count(8...30) && .alphanumeric) // 5
 
         validations.add("password match") { model in // 6
 
@@ -50,7 +51,14 @@ extension RegisterData: Validatable, Reflectable {
                 throw BasicValidationError("the terms and conditions are not accepted") // 11
             }
         }
-        return validations // 13
+        validations.add("Strong password") { model in // 12
+            guard model.password.isStrongPassword else { // 13
+                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, special character, numerals and lower case letters")
+            }
+        }
+        
+        return validations // 14
+        
     }
 }
 
@@ -65,9 +73,9 @@ extension PostUserData : Validatable, Reflectable {
     static func validations() throws -> Validations<PostUserData> { // 1
         
         var validations = Validations(PostUserData.self) // 2
-        try validations.add(\.firstname, .alphanumeric && .count(1...30)) // 3
-        try validations.add(\.lastname, .alphanumeric && .count(1...30)) // 4
-        try validations.add(\.email, .email && .count(5...30)) // 5
+        try validations.add(\.firstname, .alphanumeric && .count(1...35)) // 3
+        try validations.add(\.lastname, .alphanumeric && .count(1...35)) // 4
+        try validations.add(\.email, .email && .count(5...60)) // 5
         
         return validations // 13
     }
@@ -81,20 +89,29 @@ extension PostUserData : Validatable, Reflectable {
 /// 4. Use Validation's add(_:_:) to add a custom validator for model. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
 /// 5. Verify that newPassword and passwordConf match.
 /// 6. If they don't, throw BasicValidationError.
-/// 7. Return the validations for Vapor to test.
+/// 7. Ensure if the password is a a strong password.
+/// 8. If not throw an error.
+/// 9. Return the validations for Vapor to test.
 extension ChangePasswordData : Validatable, Reflectable {
     static func validations() throws -> Validations<ChangePasswordData> { // 1
         
         var validations = Validations(ChangePasswordData.self) // 2
-        try validations.add(\.oldPassword, .count(8...30)) // 3
-        try validations.add(\.newPassword, .count(8...30)) // 3
+        try validations.add(\.oldPassword, .count(8...30) && .alphanumeric) // 3
+        try validations.add(\.newPassword, .count(8...30) && .alphanumeric) // 3
        
         validations.add("password match") { model in // 4
             guard model.newPassword == model.passwordConf else { // 5
                 throw BasicValidationError("passwords don't match") // 6
             }
         }
-        return validations // 7
+        
+        validations.add("Strong password") { model in // 7
+            guard model.newPassword.isStrongPassword else { // 8
+                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, special character, numerals and lower case letters")
+            }
+        }
+        
+        return validations // 9
     }
 }
 
@@ -117,8 +134,8 @@ extension CreateAdUserData : Validatable, Reflectable {
     static func validations() throws -> Validations<CreateAdUserData> { // 1
         
         var validations = Validations(CreateAdUserData.self) // 2
-        try validations.add(\.city, .ascii && .count(1...30)) // 3
-        try validations.add(\.note, .ascii && .count(...100)) // 4
+        try validations.add(\.city, .alphanumeric && .count(1...35)) // 3
+        try validations.add(\.note, .alphanumeric && .count(...100)) // 4
         
         validations.add("select a department") { model in // 5
             
@@ -147,8 +164,8 @@ extension AdInfoPostData : Validatable, Reflectable {
     static func validations() throws -> Validations<AdInfoPostData> { // 1
         
         var validations = Validations(AdInfoPostData.self) // 2
-        try validations.add(\.city, .ascii && .count(1...30)) // 3
-        try validations.add(\.note, .ascii && .count(...100)) // 4
+        try validations.add(\.city, .alphanumeric && .count(1...35)) // 3
+        try validations.add(\.note, .alphanumeric && .count(...100)) // 4
         
         validations.add("select a department") { model in // 5
             
