@@ -24,7 +24,7 @@ struct AdRequest {
         
         let eegjConfig = config.setup()
         
-        let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/api/ads/\(ending)"
+        let resourceString = "http://\(eegjConfig.hostname):\(eegjConfig.port)/ads/\(ending)"
         /// Creates an url combining the resourceString and resource URL
         
         guard let resourceURL = URL(string: resourceString) else {
