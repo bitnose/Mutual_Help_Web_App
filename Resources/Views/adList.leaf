@@ -5,8 +5,8 @@
                 
                 <div id="adControlBar">
                     
-                    <a href="/countries/ads?department=#(data.selectedDepartment.id)&offers=true"><div id="offre" class="controlBar">Offres</div></a>
-                    <a href="/countries/ads?department=#(data.selectedDepartment.id)&offers=false"><div id="demand" class="controlBar">Demandes</div></a>
+                    <a href="/ads?department=#(data.selectedDepartment.id)&offers=true"><div id="offre" class="controlBar">Offres</div></a>
+                    <a href="/ads?department=#(data.selectedDepartment.id)&offers=false"><div id="demand" class="controlBar">Demandes</div></a>
                    
                 </div>
                 
