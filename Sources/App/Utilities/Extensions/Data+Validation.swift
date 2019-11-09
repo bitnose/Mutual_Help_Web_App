@@ -134,8 +134,9 @@ extension CreateAdUserData : Validatable, Reflectable {
     static func validations() throws -> Validations<CreateAdUserData> { // 1
         
         var validations = Validations(CreateAdUserData.self) // 2
-        try validations.add(\.city, .alphanumeric && .count(1...35)) // 3
-        try validations.add(\.note, .alphanumeric && .count(...100)) // 4
+        try validations.add(\.city, .count(1...35)) // 3
+        try validations.add(\.note, .count(...100)) // 4
+      
         
         validations.add("select a department") { model in // 5
             
@@ -164,8 +165,8 @@ extension AdInfoPostData : Validatable, Reflectable {
     static func validations() throws -> Validations<AdInfoPostData> { // 1
         
         var validations = Validations(AdInfoPostData.self) // 2
-        try validations.add(\.city, .alphanumeric && .count(1...35)) // 3
-        try validations.add(\.note, .alphanumeric && .count(...100)) // 4
+        try validations.add(\.city, .count(1...35)) // 3
+        try validations.add(\.note, .count(...100)) // 4
         
         validations.add("select a department") { model in // 5
             
