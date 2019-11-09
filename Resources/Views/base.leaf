@@ -23,8 +23,8 @@
             <div class="topnav">
                 
                 
-                    <a #if(title == "Home") {class= "active"} href="/countries">Landing</a>
-                     <a #if(title == "Offres" || title == "Demandes") {class= "active"} href="/countries/ads?department=&offers=true">
+                    <a #if(title == "Home") {class= "active"} href="/">Landing</a>
+                     <a #if(title == "Offres" || title == "Demandes") {class= "active"} href="/ads?department=&offers=true">
                          Ads </a>
                  <!-- IF USER LOGGED IN = FALSE -->
                  #if(userLoggedIn == false) {

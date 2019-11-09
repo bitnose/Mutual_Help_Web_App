@@ -121,6 +121,7 @@ struct AdData : Content {
     let hearts : Int
     let images : [String]?
     let createdAt : String
+    let generosity : String?
 }
 
 /**

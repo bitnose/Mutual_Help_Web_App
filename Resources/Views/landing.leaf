@@ -15,7 +15,7 @@
                 
                 
                 <div id="content">
-                    <form action="/countries/ads" accept-charset="UTF-8" method="get">
+                    <form action="/ads" accept-charset="UTF-8" method="get">
                         
                         
                         <div class="selector">
@@ -58,7 +58,7 @@
             </div>
         
             <div id="footerMobileFrame"><div id="footerMobile"><div id="footerLogo">
-                <p>&copy; 2019 gilets-jaunes-entraide.fr</p><a href="/countries"><img src="/Images/logo.svg" /></a>
+                <p>&copy; 2019 gilets-jaunes-entraide.fr</p><a href="/"><img src="/Images/logo.svg" /></a>
             </div></div></div>
             
         </div>

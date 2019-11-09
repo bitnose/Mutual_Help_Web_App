@@ -29,8 +29,8 @@ struct WebsiteController : RouteCollection {
          4. Get Request - GET IMAGE LINKS OF THE AD
          */
         websiteRoutes.get("ads", UUID.parameter, use: getAdHandler) // 1
-        websiteRoutes.get("countries", use: countryHandler) // 2
-        websiteRoutes.get("countries", "ads", use: adsOfPerimeterHandler) // 3
+        websiteRoutes.get(use: countryHandler) // 2
+        websiteRoutes.get("ads", use: adsOfPerimeterHandler) // 3
         websiteRoutes.get("ads", "images", UUID.parameter, use: getImagesHandler) // 4
       
      
@@ -95,7 +95,7 @@ struct WebsiteController : RouteCollection {
         
         if departmentString == "" || departmentString == nil {// 3
             departmentString = UserPreference.init(req: req).departmentID // 4
-            guard departmentString != nil || departmentString == "" else {throw Abort.redirect(to: "/countries")} // 5
+            guard departmentString != nil || departmentString == "" else {throw Abort.redirect(to: "/")} // 5
         } else { // 6
             UserPreference.init(req: req).departmentID = departmentString
         }
