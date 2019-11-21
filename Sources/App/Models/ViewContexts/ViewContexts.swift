@@ -523,8 +523,8 @@ struct ContactData : Content {
  - isAdmin : Bool
  - userLoggedIn : Bool
  */
-struct ErrorContext : Content {
-    let title = "Error"
+struct BasicContext : Content {
+    let title : String
     let isAdmin : Bool
     let userLoggedIn : Bool
 }
@@ -668,4 +668,49 @@ struct RegisterPostData : Content {
     let firstname : String
     let lastname : String
     let email : String
+}
+
+/**
+ # ResetPasswordContext : Context type for Reseting a password
+ - title : String
+ - isAdmin : String = false
+ - userLoggedIn = String = false
+ - error : Bool?
+ - CSRFtoken : String?
+ */
+
+struct ResetPasswordContext : Encodable {
+    
+    let title = "Reset Password"
+    let isAdmin = false
+    let userLoggedIn = false
+    let error : Bool?
+    let CSRFtoken : String?
+    
+    // Inits
+    // error = default value is false
+    init(error : Bool? = false, CSRFtoken : String?) {
+        self.error = error
+        self.CSRFtoken = CSRFtoken
+    }
+}
+
+/**
+ # IsValid : Data type which contains a result if the token is confirmed or not
+- isValid : Bool (Determines whether the reset password token is still valid)
+ */
+ struct IsValid : Content {
+    let isValid : Bool
+}
+
+/**
+ # ResetPasswordData
+ - password : String
+ - confirmedPassword : String
+ - CSRFToken  : String?
+ */
+struct ResetPasswordData : Content {
+    let password : String
+    let confirmPassword : String
+    let CSRFtoken : String?
 }

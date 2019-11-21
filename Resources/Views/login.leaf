@@ -43,7 +43,7 @@
     </form>
     </br>
     
-    <a href="">Forgat your password</a>
+    <a href="/forgottenPassword">Forgat your password</a>
         </br>
         <a href="/register">Register</a>
 </div>

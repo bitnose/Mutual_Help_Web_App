@@ -81,7 +81,7 @@ struct StandardWebsiteController : RouteCollection {
      */
     func renderErrorPageHandler(_ req: Request) throws -> Future<View> {
         
-        let errorContext = ErrorContext(isAdmin: Auth.init(req: req).isAdmin(), userLoggedIn: Auth.init(req: req).isAuthenticated())
+        let errorContext = BasicContext(title: "Error", isAdmin: Auth.init(req: req).isAdmin(), userLoggedIn: Auth.init(req: req).isAuthenticated())
      
         return try req.view().render("error", errorContext)
     }

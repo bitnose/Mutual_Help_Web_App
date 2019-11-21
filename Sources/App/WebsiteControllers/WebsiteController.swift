@@ -27,11 +27,22 @@ struct WebsiteController : RouteCollection {
          2. Get Request - GET ALL THE COUNTRIES
          3. Get Request - GET ADS OF THE PERIMETER OF THE SELECTED DEPARTMENT
          4. Get Request - GET IMAGE LINKS OF THE AD
+         5. Get Request - GET VIEW TO RESET A PASSWORD
+         6. Post Request - POST INSTRUCTIONS TO THE EMAIL
+         7. Get Request - GET VIEW "forgottenPasswordConfirmed"
+         8. Get Request - GET VIEW "resetPassword" AND CONFIRM THE RESETTOKEN
+         9. Post Request - POST NEW PASSWORDS
          */
         websiteRoutes.get("ads", UUID.parameter, use: getAdHandler) // 1
         websiteRoutes.get(use: countryHandler) // 2
         websiteRoutes.get("ads", use: adsOfPerimeterHandler) // 3
         websiteRoutes.get("ads", "images", UUID.parameter, use: getImagesHandler) // 4
+        websiteRoutes.get("forgottenPassword", use: forgottenPasswordHandler)  // 5
+        websiteRoutes.post("forgottenPassword", use: forgottenPasswordPostHandler) // 6
+        websiteRoutes.get("forgottenPasswordConfirmed", use: forgottenPasswordConfirmedHandler) // 7
+        websiteRoutes.get("resetPassword", use: resetPasswordHandler) // 8
+        websiteRoutes.post(ResetPasswordData.self, at: "resetPassword", use: resetPasswordPostHandler) // 9
+       
       
      
     }
@@ -184,7 +195,145 @@ struct WebsiteController : RouteCollection {
             }
         }
     }
+    
+    // MARK: - Reset Password Flow
+    
+    // MARK: - "forgottenPassword.leaf"
+    
+    /**
+     # Route handler to render a forgottenPasssword.leaf:
+     - Parameters:
+            - req: Request
+     - Throws: Abort Redirect
+     - Returns: Future<View>
+
+     1. Handler takes a request and returns a view.
+     2.  A context type to pass to a template.
+     3. Return and render the template.
+     */
+    
+    func forgottenPasswordHandler(_ req: Request) throws -> Future<View> { // 1
+        
+        let context = BasicContext(title: "Reset Your Password", isAdmin: false, userLoggedIn: false) // 2
+        
+        return try req.view().render("forgottenPassword", context) // 3
+    }
+    
+    
+    /**
+     # Route handler to post email
+     - Parameters:
+            - req: Request
+     - Throws: Abort Redirect
+     - Returns: Future<Response>
+     
+     1. Get the email from the request’s body. Since there’s only one parameter you’re interested in, you can use syncGet(_:at:) instead of creating a new Content type.
+     2. Make a UserRequest and call forgottenPassword method.
+     */
+    func forgottenPasswordPostHandler(_ req: Request) throws -> Future<Response> {
+        
+        let email = try req.content.syncGet(String.self, at: "email") // 1
+        return try UserRequest.init(ending: "resetPassword").forgottenPassword(req, email: email) // 2
+    }
+    
+    /**
+        # Route handler to render a forgottenPassswordConfirmed.leaf:
+        - Parameters:
+               - req: Request
+        - Throws: Abort Redirect
+        - Returns: Future<View>
+
+        1. Handler takes a request and returns a view.
+        2.  A context type to pass to a template.
+        3. Return and render the template.
+        */
+       
+    func forgottenPasswordConfirmedHandler(_ req: Request) throws -> Future<View> { // 1
+           
+        let context = BasicContext(title: "Password Reset Email Sent", isAdmin: false, userLoggedIn: false) // 2
+        return try req.view().render("forgottenPasswordConfirmed", context) // 3
+    }
+    
+    
+    /**
+     # Reset Password Handler
+     - Parameters:
+            - req: Request
+     - Throws: Abort Redirect
+     - Returns: Future<View>
+         
+     1. Query a token string from the request.
+     2. It it doesn't exist/is not valid, return a resetPassword leaf with a error message.
+     3. Make a user request to confirm that this token exists.
+     4. Decode the content of the response.
+     5. If boolean value is true, the token was valid.
+     6. Return "resetPassword"
+     7. Otherwise redirect to the home page.
+     */
+    
+    func resetPasswordHandler(_ req: Request) throws -> Future<View> {
+        
+        guard let token = req.query[String.self, at: "token"] else { // 1
+            
+            let csrfToken = CSRFToken(req: req).addToken() // 1
+            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken)) // 2
+        }
+        return try UserRequest.init(ending: "confirmResetToken").confirmResetToken(req, token: token).flatMap(to: View.self) { res in // 3
+            
+            return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 4
+                
+                if isValid.isValid == true { // 5
+                    let csrfToken = CSRFToken(req: req).addToken() // 1
+                    return try req.view().render("resetPassword", ResetPasswordContext(CSRFtoken: csrfToken)) // 6
+                } else { // 7
+                     return try req.view().render("/")
+                }
+            }
+        }
+    }
+    
+    /**
+     # ResetPasswordPostHandler
+     - Parameters:
+        - req: Request
+        - data: ResetPasswordData
+     - Throws: Abort Redirect
+     - Returns: Future<View>
+         
+     1. Define a function that accpets the decoded form data as a parameter. The router decodes the data using the helper method.
+     2. Ensure tha password match and token from the request, otherwise show the form again with the error message.
+     3. Encode the password.
+     4. Return a user request to reset the password.
+     
+     */
+    func resetPasswordPostHandler(_ req: Request, data: ResetPasswordData) throws -> Future<Response> {  // 1
+        
+        let expectedToken = CSRFToken(req: req).getToken() // 1
+        _ = CSRFToken(req: req).destroyToken // 2
+        guard let csrfToken = data.CSRFtoken,expectedToken == csrfToken else {throw Abort.redirect(to: "/error")} // 3
+    
+       // 2
+        guard data.password == data.confirmPassword,
+           let token = req.query[String.self, at: "token"]
+        else {
+            let csrfToken = CSRFToken(req: req).addToken() // 1
+            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken)).encode(for: req)
+        }
+        
+        let encodedPassword = data.password.toBase64() // 3
+        
+        return try UserRequest.init(ending: "updatePassword").resetPassword(req, password: encodedPassword, token: token) // 4
+
+    }
 }
+
+
+
+
+
+
+
+
 
 // MARK: - Data types for query filters
 
@@ -200,3 +349,5 @@ struct DepartmentFilters: Content {
     var department: String?
     var offers: Bool?
 }
+
+
