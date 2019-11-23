@@ -173,20 +173,20 @@ struct UserRequest {
        - data: UserData
      - throws: Abort Redirect
      - returns: Future : Response
-    /// 1. Helper function to update the user data of the user.
-    /// 2. Auht helper.
-    /// 3. Get the Auth token; if error occurs redirect to the login page.
-    /// 4. Add token to the headers (bearer)
-    /// 5. Make a client.
-    /// 6. Make a put request to the api with the headers.
-    /// 7. Encode the data.
-    /// 8. Map to Future<Response>.
-    /// 9. Look if the http response status is 401, if yes
-    /// 10. Logout the user.
-    /// 11. Throw an abort and redirect the user to the login page.
-    /// 12. If the status code is 200, update was successfull.
-    /// 13. Else throw an abort to redirect the user to the error page.
-    /// 14. If future resolves as an error, catch it and throw abort to redirect to the error.leaf page
+    / 1. Helper function to update the user data of the user.
+    / 2. Auht helper.
+    / 3. Get the Auth token; if error occurs redirect to the login page.
+    / 4. Add token to the headers (bearer)
+    / 5. Make a client.
+    / 6. Make a put request to the api with the headers.
+    / 7. Encode the data.
+    / 8. Map to Future<Response>.
+    / 9. Look if the http response status is 401, if yes
+    / 10. Logout the user.
+    / 11. Throw an abort and redirect the user to the login page.
+    / 12. If the status code is 200, update was successfull.
+    / 13. Else throw an abort to redirect the user to the error page.
+    / 14. If future resolves as an error, catch it and throw abort to redirect to the error.leaf page
     */
     func editUserData(_ req: Request, data: UserData) throws -> Future<Response> { // 1
     
@@ -225,22 +225,22 @@ struct UserRequest {
         - data: ChangePasswordData
     - throws: Abort Redirect
     - returns: Future : Response
-    /// 1. Helper function updates the password of the user; Parameters: Request, ChangePasswordData; Function throws if errors; Returns Future<Response>.
-    /// 2. Auht helper.
-    /// 3. Get the Auth token; if error occurs redirect to the login page.
-    /// 4. Add token to the headers (bearer)
-    /// 5. Base64 Encode the old password.
-    /// 6. Base64 Encode the new password.
-    /// 7. Make a client.
-    /// 8. Make a put request with the headers to the api. Before sending the request encode the data.
-    /// 9. Encode the content of the request to a json.
-    /// 10. Map to Future<Response>.
-    /// 11. Look if the http response status is 401, if yes
-    /// 12. Logout the user.
-    /// 13. Throw an abort and redirect the user to the login page.
-    /// 14. If the status code is 200, update was successfull.
-    /// 15. Else throw an abort to redirect the user to the error page.
-    /// 16. If future resolves as an error, catch it and throw abort to redirect to the error.leaf page
+    / 1. Helper function updates the password of the user; Parameters: Request, ChangePasswordData; Function throws if errors; Returns Future<Response>.
+    / 2. Auht helper.
+    / 3. Get the Auth token; if error occurs redirect to the login page.
+    / 4. Add token to the headers (bearer)
+    / 5. Base64 Encode the old password.
+    / 6. Base64 Encode the new password.
+    / 7. Make a client.
+    / 8. Make a put request with the headers to the api. Before sending the request encode the data.
+    / 9. Encode the content of the request to a json.
+    / 10. Map to Future<Response>.
+    / 11. Look if the http response status is 401, if yes
+    / 12. Logout the user.
+    / 13. Throw an abort and redirect the user to the login page.
+    / 14. If the status code is 200, update was successfull.
+    / 15. Else throw an abort to redirect the user to the error page.
+    / 16. If future resolves as an error, catch it and throw abort to redirect to the error.leaf page
     */
     func changePassword(_ req: Request, data: ChangePasswordData) throws -> Future<Response> {
         
@@ -272,6 +272,8 @@ struct UserRequest {
             throw Abort.redirect(to: "/error")
         }
     }
+    
+    // MARK: - DELETE USER
     
     /**
      # DELETE USER HANDLER
@@ -319,5 +321,139 @@ struct UserRequest {
     }
     
     
+    
+    // MARK: - RESET PASSWORD
+    
+    /**
+     # Helper function to send an email to the user to reset a password
+     - parameters:
+       - req: Request
+       - email: String
+     - throws: Abort Redirect
+     - returns: Future : Response
+     
+     1. Helper function to send an email to the user to reset a password
+     2. Make a client.
+     3. Make a post request to the api with the headers.
+     4. Encode the email.
+     5. Map to Future<Response>.
+     6. Print the status code and Redirect to the forgottenPasswordConfirmed.
+     7.  Catch  errors if there are any.
+     8. Print the error message.
+     9. Redirect to the forgottenPasswordConfirmed.
+    */
+    func forgottenPassword(_ req: Request, email: String) throws -> Future<Response> { // 1
+    
+        let client = try req.make(Client.self) // 2
+        
+        return client.post(resource, beforeSend: { req in // 3
+            
+            try req.content.encode(email.self, as: .json) // 4
+        
+        }).map(to: Response.self) { res in // 5
+            // 6
+            print(res.http.status.code)
+            return req.redirect(to: "forgottenPasswordConfirmed")
+            
+        }.catchMap { error in // 7
+            print(error) // 8
+            throw Abort.redirect(to: "forgottenPasswordConfirmed") // 9
+            
+        }
+    }
+    
+    /**
+        # Helper function to confirm that the token exists.
+        - parameters:
+          - req: Request
+          - token: String
+        - throws: Abort Redirect
+        - returns: Future : Response
+        
+        1. Helper function to send an email to the user to reset a password
+        2. Make a client.
+        3. Make a post request to the api with the headers.
+        4. Encode the token.
+        5. Map to Future<Response>.
+        6. Print the status code and return the response.
+        7.  Catch  errors if there are any.
+        8. Print the error message.
+        9. Return the request's response.
+       */
+    
+    func confirmResetToken(_ req: Request, token: String) throws -> Future<Response> { // 1
+        
+        let client = try req.make(Client.self) // 2
+         
+         return client.post(resource, beforeSend: { req in // 3
+             
+             try req.content.encode(token.self, as: .json) // 4
+         
+         }).map(to: Response.self) { res in // 5
+             // 6
+            return res
+             
+         }.catchMap { error in // 7
+             print(error) // 8
+            return req.response() // 9
+         }
+        
+        
+        
+    }
+    
+    /**
+     # Reset password : Update the password 
+     - parameters:
+        - req: Request
+        - password: String
+        - token: String
+     - throws: Abort Redirect to login page
+     - returns: Future : Response
+     
+     1. Helper function to send an email to the user to reset a password
+     2. Make a client.
+     3. Make a post request to the api with the headers.
+     4. Create the data and encode it
+     5. Map to Future<Response>.
+     6. Print the status code and redirect to the login page.
+     7.  Catch  errors if there are any.
+     8. Print the error message.
+     9. Return and redirect to the login page.
+     */
+    func resetPassword(_ req: Request, password: String, token: String) throws -> Future<Response> {
+        
+        let client = try req.make(Client.self) // 2
+                
+            return client.post(resource, beforeSend: { req in // 3
+                // 4
+                let data = ResetPasswordTokenData(password: password, token: token)
+                try req.content.encode(data.self, as: .json)
+                
+            }).map(to: Response.self) { res in // 5
+                    // 6
+                if res.http.status.code == 404 {
+                    
+                    return req.redirect(to: "/error")
+                    
+                } else {
+                   return req.redirect(to: "/login")
+                }
+            }.catchMap { error in // 7
+                print(error) // 8
+                return req.redirect(to: "/login") // 9
+            }
+        
+        
+        
+    }
+    
+    
+    
 
+}
+
+struct ResetPasswordTokenData : Content {
+    let password : String
+    let token : String
 }

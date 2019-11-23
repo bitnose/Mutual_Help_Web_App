@@ -677,6 +677,7 @@ struct RegisterPostData : Content {
  - userLoggedIn = String = false
  - error : Bool?
  - CSRFtoken : String?
+ - message : String? (Validation message)
  */
 
 struct ResetPasswordContext : Encodable {
@@ -686,12 +687,14 @@ struct ResetPasswordContext : Encodable {
     let userLoggedIn = false
     let error : Bool?
     let CSRFtoken : String?
+    let message : String?
     
     // Inits
     // error = default value is false
-    init(error : Bool? = false, CSRFtoken : String?) {
+    init(error : Bool? = false, CSRFtoken : String?, message : String?) {
         self.error = error
         self.CSRFtoken = CSRFtoken
+        self.message = message
     }
 }
 
@@ -713,4 +716,100 @@ struct ResetPasswordData : Content {
     let password : String
     let confirmPassword : String
     let CSRFtoken : String?
+}
+
+
+/// # EditUserData Context
+/// - csrfToken : String
+/// - User.Public : User object
+/// - title : String
+/// - message : String? = Validation error message
+
+struct EditUserDataContext : Encodable {
+    let csrfToken : String?
+    let user : Future<User.Public>
+    let title : String
+    let message: String?
+    let userLoggedIn : Bool = true
+    let isAdmin : Bool
+}
+
+/// # Context contains title and csrfToken
+/// - title : Sting = Title of the page
+/// - csrfToken : String?
+/// - message : String? = Validation error message
+struct TitleTokenMessageContext : Encodable {
+    
+    let title : String
+    let csrfToken : String?
+    let message : String?
+    let userLoggedIn : Bool
+    let isAdmin : Bool
+}
+
+
+/// # PostUserData contains data from the editUser.leaf
+/// - csrfToken? : String
+/// - firstname : String
+/// - lastname : String
+/// - email : String
+struct PostUserData : Content {
+    let csrfToken : String?
+    let firstname : String
+    let lastname : String
+    let email : String
+    
+}
+
+/// # UserData contains data to update the user data
+/// - firstname : String
+/// - lastname : String
+/// - email : String
+struct UserData : Content {
+    let firstname : String
+    let lastname : String
+    let email : String
+}
+
+
+/// # Data from the changePassword.leaf to change the password
+/// - csrfToken : String
+/// - oldPassword : String
+/// - newPassword : String
+/// - passwordConf : String
+struct ChangePasswordData : Content {
+    let csrfToken : String?
+    let oldPassword : String
+    let newPassword : String
+    let passwordConf : String
+}
+/// # RegisterData contains data from register.leaf
+/// - csrfcsrfToken : String?
+/// - firstname : String
+/// - lastname : String
+/// - email : String
+/// - password : String
+/// - confirmPassword : String
+/// - iAcceptTC : String?
+struct RegisterData : Content {
+    let csrfToken : String?
+    let firstname : String
+    let lastname : String
+    let email : String
+    let password : String
+    let confirmPassword : String
+    let iAcceptTC : String?
+}
+/// # CSRFTokenData
+/// - csrfToken: String?
+struct CSRFTokenData : Content {
+    let csrfToken: String?
+}
+
+/// # TokenData
+/// - token : Token
+/// - usertype : String
+struct TokenData : Content {
+    let token : Token
+    let usertype : String
 }

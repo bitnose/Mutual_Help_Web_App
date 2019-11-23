@@ -17,7 +17,7 @@ import Vapor
 
 /// 1. Implement validations() as required by Validatable.
 /// 2. Create a Validations instance to contain the various validators.
-/// 3. Add a validator to ensure RegisterData's firstname and lastname contains only alphanumeric characters and the count of the characters is 1-20.
+/// 3. Add a validator to ensure RegisterData's firstname and lastname contains only alphanumeric characters and the count of the characters is 1-35.
 /// 4. Add a validator to ensure RegisterData's email is a valid email address.
 /// 5. Add a validator to ensure RegisterData's password's character's count is 8-20 and it's alphanumeric
 /// # Custom Validator
@@ -53,7 +53,7 @@ extension RegisterData: Validatable, Reflectable {
         }
         validations.add("Strong password") { model in // 12
             guard model.password.isStrongPassword else { // 13
-                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, special character, numerals and lower case letters")
+                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, numerals and lower case letters")
             }
         }
         
@@ -65,8 +65,8 @@ extension RegisterData: Validatable, Reflectable {
 /// # Extend PostUserData : Validate the data which will be used to edit the user
 /// 1. Implement validations() as required by Validatable.
 /// 2. Create a Validations instance to contain the various validators.
-/// 3. Add a validator to ensure data's firstname and lastname contains only alphanumeric characters and the count of the characters is 1-20.
-/// 4. Add a validator to ensure data's email is a valid email address.
+/// 3. Add a validator to ensure data's firstname and lastname contains only alphanumeric characters and the count of the characters is 1-35.
+/// 4. Add a validator to ensure data's email is a valid email address and the count of the characters is 1-60
 /// 5. Return the validations for Vapor to test.
 extension PostUserData : Validatable, Reflectable {
     
@@ -84,7 +84,7 @@ extension PostUserData : Validatable, Reflectable {
 /// # Extend ChangePasswordData : Validate the data which will be used to change the password of the user account
 /// 1. Implement validations() as required by Validatable.
 /// 2. Create a Validations instance to contain the various validators.
-/// 3. Add a validator to ensure data's oldPassword's and newPassword's characters' count is 8-20.
+/// 3. Add a validator to ensure data's oldPassword's and newPassword's characters' count is 8-30.
 /// Custom Validator
 /// 4. Use Validation's add(_:_:) to add a custom validator for model. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
 /// 5. Verify that newPassword and passwordConf match.
@@ -105,9 +105,9 @@ extension ChangePasswordData : Validatable, Reflectable {
             }
         }
         
-        validations.add("Strong password") { model in // 7
+        validations.add("strong password") { model in // 7
             guard model.newPassword.isStrongPassword else { // 8
-                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, special character, numerals and lower case letters")
+                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, numerals and lower case letters")
             }
         }
         
@@ -121,8 +121,8 @@ extension ChangePasswordData : Validatable, Reflectable {
 /// # Extend CreateAdUserData : Validate the data which will be used to create ad
 /// 1. Implement validations() as required by Validatable.
 /// 2. Create a Validations instance to contain the various validators.
-/// 3. Add a validator to ensure data's city contains only ascii characters and the count of the characters is 1-20.
-/// 4. Add a validator to ensure data's note contains only ascii characters and the count of the characters is max 30.
+/// 3. Add a validator to ensure data's city contains only ascii characters and the count of the characters is 1-35.
+/// 4. Add a validator to ensure data's note contains only ascii characters and the count of the characters is max 100.
 
 /// Custom validation
 /// 5. Use Validation's add(_:_:) to add a custom validator for model. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
@@ -153,8 +153,8 @@ extension CreateAdUserData : Validatable, Reflectable {
 /// # Extend CreateAdUserData : Validate the data which will be used to create ad
 /// 1. Implement validations() as required by Validatable.
 /// 2. Create a Validations instance to contain the various validators.
-/// 3. Add a validator to ensure data's city contains only ascii characters and the count of the characters is 1-20.
-/// 4. Add a validator to ensure data's note contains only ascii characters and the count of the characters is max 30.
+/// 3. Add a validator to ensure data's city contains only ascii characters and the count of the characters is 1-30.
+/// 4. Add a validator to ensure data's note contains only ascii characters and the count of the characters is max 100.
 /// Custom validation
 /// 5. Use Validation's add(_:_:) to add a custom validator for model. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
 /// 6. Verify that the departmentID is not nil.
@@ -178,14 +178,14 @@ extension AdInfoPostData : Validatable, Reflectable {
     }
 }
 
-
+// MARK: TODO
 /// # Extend ImagePostData : Validate the data which will be send is not nil
 /// 1. Implement validations() as required by Validatable.
 /// 2. Create a Validations instance to contain the various validators.
 /// 3. Add a validator to ensure that image is not nil.
 /// 4. If it's nil, throw BasicValidationError
 /// 5. Add a custom validation to ensure that the image is not too big.
-/// 6.
+/// 6. If
 extension ImagePostData : Validatable, Reflectable {
     
     static func validations() throws -> Validations<ImagePostData> { // 1
@@ -199,7 +199,7 @@ extension ImagePostData : Validatable, Reflectable {
         validations.add("image is too big") { model in // 5
       
             if model.image.count > 10_000_000 { // 6
-                print(model.image.count, model.image)
+              //  print(model.image.count, model.image)
                 throw BasicValidationError("image is too big") // 7
             }
         }
@@ -207,3 +207,44 @@ extension ImagePostData : Validatable, Reflectable {
         return validations // 4
     }
 }
+
+/// # Extend ResetPasswordData : Validate the data which will be used to reset the password of the user
+/// 1. Implement validations() as required by Validatable.
+/// 2. Create a Validations instance to contain the various validators.
+/// 3. Add a validator to ensure data's password's characters' count is 8-30.
+/// Custom Validator
+/// 4. Use Validation's add(_:_:) to add a custom validator for model. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validaation fails.
+/// 5. Verify that password and confirmPassword match.
+/// 6. If they don't, throw BasicValidationError.
+/// 7. Ensure if the password is a a strong password.
+/// 8. If not throw an error.
+/// 9. Return the validations for Vapor to test.
+extension ResetPasswordData : Validatable, Reflectable {
+    
+    static func validations() throws -> Validations<ResetPasswordData> { // 1
+        
+        var validations = Validations(ResetPasswordData.self) // 2
+        try validations.add(\.password, .count(8...30) && .alphanumeric) // 3
+    
+        validations.add("password match") { model in // 4
+            guard model.password == model.confirmPassword else { // 5
+                throw BasicValidationError("passwords don't match") // 6
+            }
+        }
+        
+        validations.add("Strong password") { model in // 7
+            guard model.password.isStrongPassword else { // 8
+                throw BasicValidationError("Password must be 8 characters and contain uppercase letters, numerals and lower case letters")
+            }
+        }
+        return validations // 9
+    }
+    
+    
+    
+    
+}
+
+
+
+

@@ -273,10 +273,17 @@ struct WebsiteController : RouteCollection {
     
     func resetPasswordHandler(_ req: Request) throws -> Future<View> {
         
+        var message : String? // 3
+               // 4
+        
+        if let messge = req.query[String.self, at: "message"] { // 3
+               message = messge // 4
+           } else { message = nil } // 5
+        
         guard let token = req.query[String.self, at: "token"] else { // 1
             
             let csrfToken = CSRFToken(req: req).addToken() // 1
-            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken)) // 2
+            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)) // 2
         }
         return try UserRequest.init(ending: "confirmResetToken").confirmResetToken(req, token: token).flatMap(to: View.self) { res in // 3
             
@@ -284,7 +291,7 @@ struct WebsiteController : RouteCollection {
                 
                 if isValid.isValid == true { // 5
                     let csrfToken = CSRFToken(req: req).addToken() // 1
-                    return try req.view().render("resetPassword", ResetPasswordContext(CSRFtoken: csrfToken)) // 6
+                    return try req.view().render("resetPassword", ResetPasswordContext(CSRFtoken: csrfToken, message : message)) // 6
                 } else { // 7
                      return try req.view().render("/")
                 }
@@ -311,13 +318,35 @@ struct WebsiteController : RouteCollection {
         let expectedToken = CSRFToken(req: req).getToken() // 1
         _ = CSRFToken(req: req).destroyToken // 2
         guard let csrfToken = data.CSRFtoken,expectedToken == csrfToken else {throw Abort.redirect(to: "/error")} // 3
-    
+   
+        
+        var message : String? // 3
+                 // 4
+          
+          if let messge = req.query[String.self, at: "message"] { // 3
+                 message = messge // 4
+             } else { message = nil } // 5
+        
+        
        // 2
-        guard data.password == data.confirmPassword,
-           let token = req.query[String.self, at: "token"]
+         guard let token = req.query[String.self, at: "token"]
+    
         else {
             let csrfToken = CSRFToken(req: req).addToken() // 1
-            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken)).encode(for: req)
+            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)).encode(for: req)
+        }
+        
+        do {  // 3a
+            try data.validate()
+            // 3b
+        } catch (let error){
+            let redirect : String
+            if let error = error as? ValidationError, let message = error.reason.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                redirect = "/resetPassword/token=\(token)?message=\(message)"
+            } else {
+                redirect = "/resetPassword/token=\(token)?message=Unknown+error"
+            }
+            return req.future(req.redirect(to: redirect))
         }
         
         let encodedPassword = data.password.toBase64() // 3
@@ -326,12 +355,6 @@ struct WebsiteController : RouteCollection {
 
     }
 }
-
-
-
-
-
-
 
 
 
