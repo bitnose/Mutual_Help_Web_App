@@ -813,3 +813,23 @@ struct TokenData : Content {
     let token : Token
     let usertype : String
 }
+
+// MARK: - Data tyeps to Reset Password
+
+/**
+ # ResetPasswordTokenData is a data type to reset password
+ - password : String
+ - token : String
+ */
+struct ResetPasswordTokenData : Content {
+    let password : String
+    let token : String
+}
+
+/**
+ # Email Data type contains an email address
+ - email : String
+ */
+struct Email : Content {
+    let email : String
+}

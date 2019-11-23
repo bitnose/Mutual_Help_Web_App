@@ -282,6 +282,7 @@ struct WebsiteController : RouteCollection {
         
         guard let token = req.query[String.self, at: "token"] else { // 1
             
+            print("Token is corrupted")
             let csrfToken = CSRFToken(req: req).addToken() // 1
             return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)) // 2
         }
@@ -290,6 +291,7 @@ struct WebsiteController : RouteCollection {
             return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 4
                 
                 if isValid.isValid == true { // 5
+                    print(isValid.isValid)
                     let csrfToken = CSRFToken(req: req).addToken() // 1
                     return try req.view().render("resetPassword", ResetPasswordContext(CSRFtoken: csrfToken, message : message)) // 6
                 } else { // 7
@@ -322,10 +324,9 @@ struct WebsiteController : RouteCollection {
         
         var message : String? // 3
                  // 4
-          
-          if let messge = req.query[String.self, at: "message"] { // 3
-                 message = messge // 4
-             } else { message = nil } // 5
+        if let messge = req.query[String.self, at: "message"] { // 3
+            message = messge // 4
+        } else { message = nil } // 5
         
         
        // 2
@@ -342,9 +343,9 @@ struct WebsiteController : RouteCollection {
         } catch (let error){
             let redirect : String
             if let error = error as? ValidationError, let message = error.reason.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                redirect = "/resetPassword/token=\(token)?message=\(message)"
+                redirect = "/resetPassword?token=\(token)?message=\(message)"
             } else {
-                redirect = "/resetPassword/token=\(token)?message=Unknown+error"
+                redirect = "/resetPassword?token=\(token)?message=Unknown+error"
             }
             return req.future(req.redirect(to: redirect))
         }

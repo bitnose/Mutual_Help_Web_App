@@ -454,12 +454,4 @@ struct UserRequest {
 
 }
 
-struct ResetPasswordTokenData : Content {
-    let password : String
-    let token : String
-}
 
-
-struct Email : Content {
-    let email : String
-}
