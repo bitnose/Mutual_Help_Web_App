@@ -286,7 +286,7 @@ struct WebsiteController : RouteCollection {
             let csrfToken = CSRFToken(req: req).addToken() // 1
             return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)) // 2
         }
-        return try UserRequest.init(ending: "confirmResetToken/\(token)").confirmResetToken(req.flatMap(to: View.self) { res in // 3
+        return try UserRequest.init(ending: "confirmResetToken/\(token)").confirmResetToken(req).flatMap(to: View.self) { res in // 3
             
             return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 4
                 
