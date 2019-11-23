@@ -280,13 +280,19 @@ struct WebsiteController : RouteCollection {
                message = messge // 4
            } else { message = nil } // 5
         
-        guard let token = req.query[String.self, at: "token"] else { // 1
-            
-            print("Token is corrupted")
+        var token : String?
+        
+        do {
+         token = try req.query.get(String.self, at: "token")
+         
+        } catch let error {
+      
+            print("Token is corrupted", error)
             let csrfToken = CSRFToken(req: req).addToken() // 1
             return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)) // 2
         }
-        return try UserRequest.init(ending: "confirmResetToken/\(token)").confirmResetToken(req).flatMap(to: View.self) { res in // 3
+        
+        return try UserRequest.init(ending: "confirmResetToken/\(token!)").confirmResetToken(req).flatMap(to: View.self) { res in // 3
             
             return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 4
                 
@@ -335,6 +341,7 @@ struct WebsiteController : RouteCollection {
         
         var message : String? // 3
                  // 4
+    
         if let messge = req.query[String.self, at: "message"] { // 3
             message = messge // 4
         } else { message = nil } // 5
