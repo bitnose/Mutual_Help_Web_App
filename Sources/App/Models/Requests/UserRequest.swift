@@ -367,31 +367,24 @@ struct UserRequest {
         # Helper function to confirm that the token exists.
         - parameters:
           - req: Request
-          - token: String
         - throws: Abort Redirect
         - returns: Future : Response
         
         1. Helper function to send an email to the user to reset a password
         2. Make a client.
-        3. Make a post request to the api with the headers.
-        4. Encode the token.
-        5. Map to Future<Response>.
-        6. Print the status code and return the response.
-        7.  Catch  errors if there are any.
-        8. Print the error message.
-        9. Return the request's response.
-       */
+        3. Make a post request to the api and map to Future<Response>.
+        4. Return response.
+        5.  Catch  errors if there are any.
+        6. Print the error message.
+        7. Return the request's response.
+    */
     
-    func confirmResetToken(_ req: Request, token: String) throws -> Future<Response> { // 1
+    func confirmResetToken(_ req: Request) throws -> Future<Response> { // 1
         
         let client = try req.make(Client.self) // 2
          
-         return client.post(resource, beforeSend: { req in // 3
-             
-             try req.content.encode(token.self, as: .json) // 4
-         
-         }).map(to: Response.self) { res in // 5
-             // 6
+         return client.post(resource).map(to: Response.self) { res in // 3
+             // 4
             return res
              
          }.catchMap { error in // 7
@@ -453,5 +446,7 @@ struct UserRequest {
     
 
 }
+
+
 
 

@@ -286,7 +286,7 @@ struct WebsiteController : RouteCollection {
             let csrfToken = CSRFToken(req: req).addToken() // 1
             return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)) // 2
         }
-        return try UserRequest.init(ending: "confirmResetToken").confirmResetToken(req, token: token).flatMap(to: View.self) { res in // 3
+        return try UserRequest.init(ending: "confirmResetToken/\(token)").confirmResetToken(req.flatMap(to: View.self) { res in // 3
             
             return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 4
                 
@@ -309,10 +309,21 @@ struct WebsiteController : RouteCollection {
      - Throws: Abort Redirect
      - Returns: Future<View>
          
+     
+     
      1. Define a function that accpets the decoded form data as a parameter. The router decodes the data using the helper method.
-     2. Ensure tha password match and token from the request, otherwise show the form again with the error message.
-     3. Encode the password.
-     4. Return a user request to reset the password.
+     2. Get the expected CSRF token from the session.
+     3. Destroy token from the session.
+     4. Ensure that the tokens match with each other, otherwise throw an abort and redirect to the error page.
+     5. Message variable.
+     6. Query a string from the request at message. If it exists, get the string, otherwise set the message to nil.
+     7. Get the token from the request.
+     8. Otherwise add new CSRFtoken and render the page again with an error message.
+     9. If token was found, try to validate input data.
+     10. Catch validation errors if there are any, add a possible error message to the url  and redirect to the url. If there was another kind of error, redirect to the url with an Unknown error message.
+     11. Return the redirect.
+     12. Encode the password.
+     13. Return a user request to reset the password.
      
      */
     func resetPasswordPostHandler(_ req: Request, data: ResetPasswordData) throws -> Future<Response> {  // 1
