@@ -261,46 +261,39 @@ struct WebsiteController : RouteCollection {
             - req: Request
      - Throws: Abort Redirect
      - Returns: Future<View>
-         
-     1. Query a token string from the request.
-     2. It it doesn't exist/is not valid, return a resetPassword leaf with a error message.
-     3. Make a user request to confirm that this token exists.
-     4. Decode the content of the response.
-     5. If boolean value is true, the token was valid.
-     6. Return "resetPassword"
-     7. Otherwise redirect to the home page.
+        
+     
+     1. Decode the filters from the request.
+     2. Get the message filter and if it's nil set it up the value of message to nil.
+     3. Get the token from the filter.
+     4. If the token is nil, add new CSRFtoken and render the page again with an error message.
+     5. Make a user request to confirm that this token exists.
+     6. Decode the content of the response.
+     7. If boolean value is true, the token was valid.
+     8. Add csrfToken and Return "resetPassword"
+     9. Otherwise redirect to the home page.
      */
     
     func resetPasswordHandler(_ req: Request) throws -> Future<View> {
         
-        var message : String? // 3
-               // 4
-        
-        if let messge = req.query[String.self, at: "message"] { // 3
-               message = messge // 4
-           } else { message = nil } // 5
-        
-        var token : String?
-        
-        do {
-         token = try req.query.get(String.self, at: "token")
-         
-        } catch let error {
-      
-            print("Token is corrupted", error)
-            let csrfToken = CSRFToken(req: req).addToken() // 1
-            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message)) // 2
+        let filters = try req.query.decode(ResetPasswordFilters.self) // 1
+        let message = filters.message ?? nil // 2
+          
+        guard let token = filters.token else { // 3
+            // 4
+            let csrfToken = CSRFToken(req: req).addToken()
+            return try req.view().render("resetPassword", ResetPasswordContext(error: true, CSRFtoken: csrfToken, message: message))
         }
         
-        return try UserRequest.init(ending: "confirmResetToken/\(token!)").confirmResetToken(req).flatMap(to: View.self) { res in // 3
+        return try UserRequest.init(ending: "confirmResetToken/\(token)").confirmResetToken(req).flatMap(to: View.self) { res in // 5
             
-            return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 4
+            return try res.content.decode(IsValid.self).flatMap(to: View.self) { isValid in // 6
                 
-                if isValid.isValid == true { // 5
-                    print(isValid.isValid)
-                    let csrfToken = CSRFToken(req: req).addToken() // 1
-                    return try req.view().render("resetPassword", ResetPasswordContext(CSRFtoken: csrfToken, message : message)) // 6
-                } else { // 7
+                if isValid.isValid == true { // 7
+                   // 8
+                    let csrfToken = CSRFToken(req: req).addToken()
+                    return try req.view().render("resetPassword", ResetPasswordContext(CSRFtoken: csrfToken, message : message))
+                } else { // 9
                      return try req.view().render("/")
                 }
             }
@@ -392,5 +385,4 @@ struct DepartmentFilters: Content {
 struct ResetPasswordFilters: Content {
     var token : String?
     var message : String?
-    
 }
