@@ -347,8 +347,9 @@ struct UserRequest {
         let client = try req.make(Client.self) // 2
         
         return client.post(resource, beforeSend: { req in // 3
+            let data = Email(email: email)
             
-            try req.content.encode(email.self, as: .json) // 4
+            try req.content.encode(data.self, as: .json) // 4
         
         }).map(to: Response.self) { res in // 5
             // 6
@@ -456,4 +457,9 @@ struct UserRequest {
 struct ResetPasswordTokenData : Content {
     let password : String
     let token : String
+}
+
+
+struct Email : Content {
+    let email : String
 }
