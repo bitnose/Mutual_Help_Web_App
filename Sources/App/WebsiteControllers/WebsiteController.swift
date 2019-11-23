@@ -98,7 +98,6 @@ struct WebsiteController : RouteCollection {
   
     func adsOfPerimeterHandler(_ req: Request) throws -> Future<View> {
         
-        
         let filters = try req.query.decode(DepartmentFilters.self) // 1
         // 2
         var departmentString = filters.department
@@ -346,9 +345,9 @@ struct WebsiteController : RouteCollection {
         } catch (let error){
             let redirect : String
             if let error = error as? ValidationError, let message = error.reason.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                redirect = "/resetPassword?token=\(token)?message=\(message)"
+                redirect = "/resetPassword?token=\(token)&message=\(message)"
             } else {
-                redirect = "/resetPassword?token=\(token)?message=Unknown+error"
+                redirect = "/resetPassword?token=\(token)&message=Unknown+error"
             }
             return req.future(req.redirect(to: redirect))
         }
