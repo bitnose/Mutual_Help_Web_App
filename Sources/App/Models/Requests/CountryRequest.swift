@@ -17,7 +17,7 @@ struct CountryRequest {
     
     let resource: URL
     private let config = EegjAPIConfiguration()
-    init(ending: String) {
+    init(ending: String) throws {
         
         // Get the configurations
         let eegjConfig = config.setup()
@@ -26,7 +26,7 @@ struct CountryRequest {
         /// Creates an url combining the resourceString and resource URL
            
         guard let resourceURL = URL(string: resourceString) else {
-            fatalError()
+             throw Abort.redirect(to: "/error")
         }
         
         self.resource = resourceURL

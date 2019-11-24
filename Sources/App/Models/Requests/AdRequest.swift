@@ -20,7 +20,7 @@ struct AdRequest {
     
     let resource: URL
     private let config = EegjAPIConfiguration()
-    init(ending: String) {
+    init(ending: String) throws {
         
         let eegjConfig = config.setup()
         
@@ -28,9 +28,10 @@ struct AdRequest {
         /// Creates an url combining the resourceString and resource URL
         
         guard let resourceURL = URL(string: resourceString) else {
-            fatalError()
+           
+            throw Abort.redirect(to: "/error")
         }
-        
+             
         self.resource = resourceURL
     }
     
