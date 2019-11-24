@@ -26,19 +26,19 @@
                     <a #if(title == "Home") {class= "active"} href="/">Landing</a>
                      <a #if(title == "Offres" || title == "Demandes") {class= "active"} href="/ads?department=&offers=true">
                          Ads </a>
-                 <!-- IF USER LOGGED IN = FALSE -->
+               
                  #if(userLoggedIn == false) {
                     <a #if(title == "Login") {class= "active"} href="/login">Login!</a>
                                               
                     <a #if(title == "Register") {class= "active"} href="/register"> Register </a>
                     }
                 #if(userLoggedIn) {
-                <!-- IF USER LOGGED IN = TRUE -->
+           
                     <a #if(title == "My Profile") {class= "active"} href="/self/index">My Profile</a>
  
                     <a href="/logout">Logout!</a>
                 }
-                <!-- IF USER LOGGED IN + ADMINUSER = TRUE -->
+                
                 #if(userLoggedIn == true && isAdmin == true) {
                 
                     <a #if(title == "All the Ads") {class= "active"} href="/admin/index">All Ads</a>

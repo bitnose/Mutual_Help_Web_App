@@ -41,6 +41,7 @@ struct UserWebsiteController : RouteCollection  {
         protectedRoutes.post(ChangePasswordData.self, at: "self", "edit", "password", use: postChangePasswordHandler) // 7
         userRoutes.get("register", use: registerHandler) // 8
         userRoutes.post(RegisterData.self, at: "register", use: postRegisterHandler) // 9
+        protectedRoutes.post(CSRFTokenData.self, at: "self", "edit", "user", "delete", use: deleteProfileHandler)
         
        
     }
@@ -375,7 +376,7 @@ struct UserWebsiteController : RouteCollection  {
      3. Look if the csrfToken and the existingToken matches. If not throw a bad request.
      3a. Call validate() on the decded RegisterData, checking each validator. This can throw ValidationError and in this case, redirect the user back to the register.leaf.
      3b. When validation fails, the route handler extracts the message from the ValidationError, escapes it properly for inlcusion in a URL, and adds it to the redirect URL. Then, it redirects the user back to the registration page.
-     5. Make UserRequest to send the updated data.
+     4. Make UserRequest to send the updated data.
      
      */
     func postChangePasswordHandler(_ req: Request, data: ChangePasswordData) throws -> Future<Response> {
@@ -398,4 +399,35 @@ struct UserWebsiteController : RouteCollection  {
         }
         return try UserRequest.init(ending: "change/password").changePassword(req, data: data) // 4
     }
+    
+    
+    /**
+     # Delete profile handler
+     - parameters:
+        - req: Request
+        - data: CSRFTokenData
+     - throws: Abort
+     - returns: Response
+     
+      1. Get the expected token from the request's session.
+      2. Set the token to nil in the session.
+      3. Look if the csrfToken and the existingToken matches. If not redirect to the error page.
+      4. Extract the user id from the parameter.
+      5. Make an user request to delete the user.
+
+     */
+    func deleteProfileHandler(_ req: Request, data: CSRFTokenData) throws -> Future<Response> {
+        
+        let expectedToken = CSRFToken(req: req).getToken() // 1
+        _ = CSRFToken(req: req).destroyToken // 2
+        guard let csrfToken = data.csrfToken,expectedToken == csrfToken else {throw Abort.redirect(to: "/error")} // 3
+        
+        return try UserRequest.init(ending: "delete/profile").deleteUser(req) // 5
+
+    }
+    
+    
+    
+    
+    
 }

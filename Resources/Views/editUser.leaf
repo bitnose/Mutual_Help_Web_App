@@ -44,14 +44,29 @@
             </div>
             
             <br>
-            <button class="subnmitButton" type="submit">Update</button>
+            <button class="subnmitButton" type="submit">Save</button>
                 
             </form>
         <br>
 
-    
-    
     <a href="/self/index"><button class="subnmitButton" type="submit">Cancel</button></a>
+    
+      <br>
+        <br>
+          <br>
+            <br>
+    
+
+     <form method="post" action="/self/edit/user/delete">
+        #if(csrfToken) {
+        <input type="hidden" name="csrfToken" value="#(csrfToken)">
+        }
+        
+         <br>
+    <button class="submitButton" type="submit">Delete Account</button>
+    <p>Warning! This action deletes your account permanently and can't be undone!"</p>
+    </form>
+    
     
 </div>
 

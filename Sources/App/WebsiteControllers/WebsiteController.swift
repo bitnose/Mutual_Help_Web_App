@@ -151,7 +151,6 @@ struct WebsiteController : RouteCollection {
         let context = AdInfoContext(title: "Ad", csrfToken: ctoken, ad: ad, userLoggedIn: Auth.isAuthenticated(.init(req: req))(), isAdmin: Auth.isAdmin(.init(req: req))()) // 4
         return try req.view().render("offer", context) // 5
                 
-         
     }
 
     // MARK: - images.leaf
