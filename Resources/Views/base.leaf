@@ -76,7 +76,7 @@
                    <span class="muted">
         
                      This site uses cookies! To accept this, click
-                     <a href="#" onclick="cookiesConfirmed()">OK.</a><a href="/cookies/"> Read more.</a>
+                     <a href="#" onclick="cookiesConfirmed()">OK.</a><a href="/terms"> Read more.</a>
                    </span>
                  </div>
                </footer>

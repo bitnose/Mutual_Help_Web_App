@@ -42,6 +42,7 @@ struct WebsiteController : RouteCollection {
         websiteRoutes.get("forgottenPasswordConfirmed", use: forgottenPasswordConfirmedHandler) // 7
         websiteRoutes.get("resetPassword", use: resetPasswordHandler) // 8
         websiteRoutes.post(ResetPasswordData.self, at: "resetPassword", use: resetPasswordPostHandler) // 9
+        websiteRoutes.get("terms", use: renderTermsHandler) // 10
        
       
      
@@ -356,6 +357,24 @@ struct WebsiteController : RouteCollection {
         return try UserRequest.init(ending: "updatePassword").resetPassword(req, password: encodedPassword, token: token) // 12
 
     }
+    
+    /**
+     # Render terms page
+     - parameters
+        - req: Request
+     - throws: Abort
+     - returns: Redirect
+     
+     */
+    
+    func renderTermsHandler(_ req: Request) throws -> Future<View> {
+        
+        let context = BasicContext(title: "Info", isAdmin: Auth.init(req: req).isAdmin(), userLoggedIn: Auth.init(req: req).isAuthenticated())
+        return try req.view().render("terms", context)
+    }
+    
+    
+    
 }
 
 

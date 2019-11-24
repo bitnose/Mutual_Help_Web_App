@@ -1,0 +1,83 @@
+#set("content") {
+<div id="centerFrame">
+    <br>
+    <br>
+    <h2>Individuel</h2>
+    <br>
+    <br>
+    <br>
+    <h4>Inscription</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>Connection</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>Qui sommes nous?</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h2>Legal</h2>
+    <br>
+    <br>
+    <br>
+    <h4>Données personnelles</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>Gestion des cookies</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>Mentions légales</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h2>Support</h2>
+    <br>
+    <br>
+    <br>
+    <h4>FAQ</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>Base de connaissances</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>Contactez-nous</h4>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+}
+#embed("base")
+
