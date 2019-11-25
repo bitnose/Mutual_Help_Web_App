@@ -59,7 +59,7 @@
         </div>
         <br>
        
-        <input type="checkbox" name="iAcceptTC" value="yes" id="iAcceptTC"/><label for ="iAcceptTC">I accept the <a href="/terms/conditions">Terms and Conditions</a></label>
+        <input type="checkbox" name="iAcceptTC" value="yes" id="iAcceptTC"/><label for ="iAcceptTC">I accept the <a href="/terms">Terms and Conditions</a></label>
         
         <br>
         <button class="subnmitButton" type="submit">Register!</button>
